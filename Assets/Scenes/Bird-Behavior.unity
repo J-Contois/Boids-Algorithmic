@@ -337,12 +337,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686a700295b5cca4ab9f1bf8f5774f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _birdPrefab: {fileID: 0}
-  limitBird: 0
-  _type: 0
-  _fieldView: 0
-  _minSpeed: 0
-  _maxSpeed: 0
+  _birdPrefab: {fileID: 6126264120193108708, guid: d8a39ad36d7f3744bb8ece5c47a75101, type: 3}
+  limit: 5
+  _minSpeed: 1
+  _maxSpeed: 2
+  _maxVelocity: 5
+  _fieldView: 5
 --- !u!4 &249513436
 Transform:
   m_ObjectHideFlags: 0
