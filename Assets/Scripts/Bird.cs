@@ -3,25 +3,68 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
-    private BehaviorTypeEnum _type;
+    private bool leader;
+    private BehaviorTypeEnum behaviorType;
     private float _fieldView;
     private float _speed;
-    private float _force;
-
     private Vector3 _direction;
+    private float _maxVelocity;
+
     private List<Bird> _neighbourList;
 
-    public Bird(BehaviorTypeEnum type, float fieldView, float speed, float force)
+    public void Init(float fieldView, float speed, float maxVelocity)
     {
-        _type = type;
         _fieldView = fieldView;
         _speed = speed;
-        _force = force;
+        _maxVelocity = maxVelocity;
+        _neighbourList = new List<Bird>();
     }
 
-    private void NeighbourDetector()
+    // Look if other bird are in the radius of bird and adding them in neighbour list
+    public void NeighbourDetector(List<Bird> birdList)
     {
-        
+        if (birdList.Count == 0) return;
+
+        _neighbourList.Clear();
+        for (int i = 0; i < birdList.Count; i++)
+        {
+            if (birdList[i] != this)
+            {
+                if (Vector3.Distance(transform.position, birdList[i].transform.position) <= _fieldView) {
+                    _neighbourList.Add(birdList[i]);
+                }
+            }
+        }
+
+        _direction = Barycentre();
     }
 
+    private Vector3 Barycentre()
+    {
+        if (_neighbourList.Count == 0) return transform.position;
+
+        Vector3 sum = Vector3.zero;
+
+        for (int i = 0; i < _neighbourList.Count; i++)
+        {
+            sum += _neighbourList[i].transform.position;
+        }
+
+        Vector3 barycentre = sum / _neighbourList.Count;
+
+        return barycentre;
+    }
+
+
+    public virtual void Move(float deltaTime)
+    {
+        Vector3 velocity = _direction * _speed;
+
+        if (velocity.magnitude > _maxVelocity)
+        {
+            velocity = velocity.normalized * _maxVelocity;
+        }
+
+        transform.position += velocity * deltaTime;
+    }
 }

@@ -4,6 +4,5 @@ public enum BehaviorTypeEnum
 {
     latecomer,
     enthusiastic,
-    tight,
-    leader
+    clingy
 }
