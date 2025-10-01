@@ -4,6 +4,8 @@ using UnityEngine;
 // ! Feathers movement still needs some perfection (shakes a bit too much)
 public class FlyBehaviour : MonoBehaviour {
     [Header("Flying animation")]
+    [Tooltip("If false, the object will move within a flock")]
+    [SerializeField] private bool autonomous = true;
     [SerializeField] private bool clockwise = true;                             // Clockwise or counterclockwise
     [SerializeField] private float radius = 15f;                                // Size of circle to fly around
     [SerializeField] private float speed = 1f;                                  // Fly speed
@@ -92,7 +94,11 @@ public class FlyBehaviour : MonoBehaviour {
         float targetAngle = Mathf.Clamp(-verticalSpeed * featherAmplitude, -featherAmplitude, featherAmplitude);
         _currentFeatherAngle = Mathf.Lerp(_currentFeatherAngle, targetAngle, Time.deltaTime * featherSmooth);
 
-        foreach (var feather in _Feathers)
-            feather.localRotation = Quaternion.Euler(_currentFeatherAngle, 0f, 0f);
+        foreach (var feather in _Feathers) {
+            bool inverted = Mathf.Abs(Mathf.Round(feather.parent.localEulerAngles.z) - 180f) < 1f;
+            Debug.Log($"{feather.parent.parent} : {inverted}");                 // !!!
+            float appliedAngle = inverted ? -_currentFeatherAngle : _currentFeatherAngle;
+            feather.localRotation = Quaternion.Euler(appliedAngle, 0f, 0f);
+        }
     }
 }
