@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
+    [SerializeField] private Transform _target;
     [Tooltip("Distance from the leader")]
     [SerializeField] private float offSet = 10f;
     [Tooltip("Speed of camera movement")]
@@ -9,20 +10,16 @@ public class CameraManager : MonoBehaviour {
     [SerializeField] private float rotation = 100f;
 
     private bool isPaused = false;
-    private Transform _leader;
 
     void Start() {
-        // Look for a leader
+        transform.LookAt(_target);                                              // Look for a leader
     }
 
     void Update() {
-        // If there is a leader, follow it
-        // Else, move with arrow keys
-        // Pause with spacebar
-        if (_leader != null) {
-            transform.position = Vector3.Lerp(transform.position, _leader.position - _leader.forward * offSet, speed * Time.unscaledDeltaTime);
-            transform.LookAt(_leader);
-        } else {
+        if (_target != null) {
+            transform.position = Vector3.Lerp(transform.position, _target.position + _target.forward * offSet, speed * Time.unscaledDeltaTime);
+            transform.LookAt(_target);
+        } else {                                                                // Free camera mode
             MoveCamera();
             RotateCamera();
         }
