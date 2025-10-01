@@ -4,6 +4,8 @@ using UnityEngine;
 // ! Feathers movement still needs some perfection (shakes a bit too much)
 public class FlyBehaviour : MonoBehaviour {
     [Header("Flying animation")]
+    [Tooltip("If false, the object will move within a flock")]
+    [SerializeField] private bool autonomous = true;
     [SerializeField] private bool clockwise = true;                             // Clockwise or counterclockwise
     [SerializeField] private float radius = 15f;                                // Size of circle to fly around
     [SerializeField] private float speed = 1f;                                  // Fly speed

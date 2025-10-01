@@ -18,11 +18,17 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _spawnRadius = 5f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
     //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
+
+    [Header("Materials")]
+    [SerializeField] private Material _bodyMaterial;
+    [SerializeField] private Material _featherMaterial;
+
     [Header("Agent Settings")]
     [SerializeField] private Bird _agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
     [SerializeField] private float _agentSight = 10f;
-    [SerializeField] private float _agentSpeed = 5f;
+    [SerializeField] private float _agentMinSpeed = 1f;
+    [SerializeField] private float _agentMaxSpeed = 10f;
     [SerializeField] private float _agentMaxVelocity = 100f;
 
     [HideInInspector] public enum FlockBehaviour { Dense, Loose, Elongated };
@@ -55,6 +61,7 @@ public class FlockManager : MonoBehaviour {
         for (int i = 1; i < _numberOfAgents; i++) {
             Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+            float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
             newBoid.Init(this, _agentSight, _agentSpeed, _agentMaxVelocity);
             _Agents[i] = newBoid;
         }
@@ -65,4 +72,10 @@ public class FlockManager : MonoBehaviour {
 
         foreach (var agent in _Agents) agent.Tick(_Agents, Time.deltaTime);
     }
+
+    public float GetCohesion() { return cohesion; }
+
+    public float GetSeparation() { return separation; }
+
+    public float GetAlignment() { return alignment; }
 }
