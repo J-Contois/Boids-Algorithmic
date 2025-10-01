@@ -92,7 +92,11 @@ public class FlyBehaviour : MonoBehaviour {
         float targetAngle = Mathf.Clamp(-verticalSpeed * featherAmplitude, -featherAmplitude, featherAmplitude);
         _currentFeatherAngle = Mathf.Lerp(_currentFeatherAngle, targetAngle, Time.deltaTime * featherSmooth);
 
-        foreach (var feather in _Feathers)
-            feather.localRotation = Quaternion.Euler(_currentFeatherAngle, 0f, 0f);
+        foreach (var feather in _Feathers) {
+            bool inverted = Mathf.Abs(Mathf.Round(feather.parent.localEulerAngles.z) - 180f) < 1f;
+            Debug.Log($"{feather.parent.parent} : {inverted}");                 // !!!
+            float appliedAngle = inverted ? -_currentFeatherAngle : _currentFeatherAngle;
+            feather.localRotation = Quaternion.Euler(appliedAngle, 0f, 0f);
+        }
     }
 }

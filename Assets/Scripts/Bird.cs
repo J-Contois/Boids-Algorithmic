@@ -4,6 +4,7 @@ using UnityEngine;
 public class Bird : MonoBehaviour
 {
     private bool leader;
+    private FlockManager _manager;
     private BehaviorTypeEnum behaviorType;
     private float _fieldView;
     private float _speed;
@@ -12,12 +13,19 @@ public class Bird : MonoBehaviour
 
     private List<Bird> _neighbourList;
 
-    public void Init(float fieldView, float speed, float maxVelocity)
+    public void Init(FlockManager manager, float fieldView, float speed, float maxVelocity)
     {
+        _manager = manager;
         _fieldView = fieldView;
         _speed = speed;
         _maxVelocity = maxVelocity;
         _neighbourList = new List<Bird>();
+    }
+
+    public void Tick(List<Bird> birdList, float deltaTime)
+    {
+        NeighbourDetector(birdList);
+        Move(deltaTime);
     }
 
     // Look if other bird are in the radius of bird and adding them in neighbour list

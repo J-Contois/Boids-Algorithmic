@@ -1,22 +1,34 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-// ! Each flock will have one leader
-// ! In next version, flocks will be able to exchange agents
+// Leader : yellow
+// Latecomer : blue
+// Enthusiastic : red
+// Clingy : green
+
+// I Each flock will have one leader
+// ! Add flocks ability to exchange agents
+// ! Add agents ability to flee predators and seek food
+// ! Add agents ability to avoid obstacles
 public class FlockManager : MonoBehaviour {
-    [SerializeField] private Boid _agentPrefab;
+    [Header("Flock Settings")]
     [Tooltip("Number of agents in the flock")]
     [SerializeField] private int _numberOfAgents = 20;
     [Tooltip("Radius within which agents are spawned")]
     [SerializeField] private float _spawnRadius = 5f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
     //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
+    [Header("Agent Settings")]
+    [SerializeField] private Bird _agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
     [SerializeField] private float _agentSight = 10f;
+    [SerializeField] private float _agentSpeed = 5f;
+    [SerializeField] private float _agentMaxVelocity = 100f;
 
     [HideInInspector] public enum FlockBehaviour { Dense, Loose, Elongated };
     [SerializeField] private FlockBehaviour flockBehaviour;
 
-    private Boid[] _Agents;
+    private List<Bird> _Agents;
     private GameObject _agentParent;
     private float cohesion = 1f;
     private float separation = 1f;
@@ -38,20 +50,19 @@ public class FlockManager : MonoBehaviour {
         }
 
         if (_agentPrefab == null) return;
-        _Agents = new Boid[_numberOfAgents];                                    // Create agents
+        _Agents = new List<Bird>();                                             // Create agents
         _Agents[0] = _agentPrefab;                                              // ! Make it the leader
         for (int i = 1; i < _numberOfAgents; i++) {
             Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
-            Boid newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
-            newBoid.Init(this, _agentSight);
+            Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+            newBoid.Init(this, _agentSight, _agentSpeed, _agentMaxVelocity);
             _Agents[i] = newBoid;
         }
     }
 
     void Update() {
         if (_Agents == null) return;
-        foreach (var agent in _Agents) {
-            agent.Tick(_Agents);
-        }
+
+        foreach (var agent in _Agents) agent.Tick(_Agents, Time.deltaTime);
     }
 }
