@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65151d2917025b498b5f303e932248e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 7146791415957552840}
+  _target: {fileID: 0}
   offSet: 5
   speed: 5
   rotation: 100
@@ -540,18 +540,13 @@ PrefabInstance:
       objectReference: {fileID: 354704978}
     - target: {fileID: 8937829741022068847, guid: 41d2ca1922f51f24182d745c9fe225e3, type: 3}
       propertyPath: featherAmplitude
-      value: 25
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41d2ca1922f51f24182d745c9fe225e3, type: 3}
---- !u!4 &7146791415957552840 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6458000525628318563, guid: 41d2ca1922f51f24182d745c9fe225e3, type: 3}
-  m_PrefabInstance: {fileID: 7146791415957552837}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
