@@ -47,6 +47,7 @@ $RECYCLE.BIN/
 sysinfo.txt
 
 ### Local files ###
+.github/copilot-instructions.md
 .wsuo
 slnx.sqlite
 f98a5f83-44d8-4978-8c44-e2a12f522663.vsidx
