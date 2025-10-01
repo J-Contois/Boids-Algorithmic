@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
+    [Header("Materials")]
+    [SerializeField] private Material _bodyMaterial;
+    [SerializeField] private Material _featherMaterial;
+
     private bool leader;
     private FlockManager _manager;
     private BehaviorTypeEnum behaviorType;

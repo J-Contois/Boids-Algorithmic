@@ -19,10 +19,6 @@ public class FlockManager : MonoBehaviour {
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
     //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
 
-    [Header("Materials")]
-    [SerializeField] private Material _bodyMaterial;
-    [SerializeField] private Material _featherMaterial;
-
     [Header("Agent Settings")]
     [SerializeField] private Bird _agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
@@ -63,7 +59,7 @@ public class FlockManager : MonoBehaviour {
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
             newBoid.Init(this, _agentSight, _agentSpeed, _agentMaxVelocity);
-            _Agents[i] = newBoid;
+            _Agents.Add(newBoid);
         }
     }
 

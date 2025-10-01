@@ -444,8 +444,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 354704978}
     - target: {fileID: 8937829741022068847, guid: 41d2ca1922f51f24182d745c9fe225e3, type: 3}
-      propertyPath: featherAmplitude
-      value: 40
+      propertyPath: autonomous
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
