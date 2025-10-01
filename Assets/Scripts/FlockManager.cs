@@ -53,7 +53,7 @@ public class FlockManager : MonoBehaviour {
 
         if (_agentPrefab == null) return;
         _Agents = new List<Bird>();                                             // Create agents
-        _Agents[0] = _agentPrefab;                                              // ! Make it the leader
+        /*_Agents[0] = _agentPrefab;*/                                              // ! Make it the leader
         for (int i = 1; i < _numberOfAgents; i++) {
             Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);

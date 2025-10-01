@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bird : MonoBehaviour
+public class Bird : MonoBehaviour, IEnthusiastic, ILatecomer, IClingy
 {
     [Header("Materials")]
     [SerializeField] private Material _bodyMaterial;
@@ -24,12 +25,77 @@ public class Bird : MonoBehaviour
         _speed = speed;
         _maxVelocity = maxVelocity;
         _neighbourList = new List<Bird>();
+
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(true);
+
+        foreach (Renderer rend in renderers)
+        {
+            Material[] mats = rend.materials;
+
+            for (int i = 0; i < mats.Length; i++)
+            {
+                if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
+                {
+                    Color color = Color.white;
+
+                    if (leader)
+                    {
+                        color = Color.yellow;
+                    }
+                    else
+                    {
+                        switch (behaviorType)
+                        {
+                            case BehaviorTypeEnum.enthusiastic:
+                                color = Color.red;
+                                break;
+                            case BehaviorTypeEnum.latecomer:
+                                color = Color.blue;
+                                break;
+                            case BehaviorTypeEnum.clingy:
+                                color = Color.green;
+                                break;
+                        }
+                    }
+
+                    mats[i].color = color;
+                }
+            }
+
+            rend.materials = mats;
+        }
     }
 
     public void Tick(List<Bird> birdList, float deltaTime)
     {
         NeighbourDetector(birdList);
-        Move(deltaTime);
+        switch (behaviorType)
+        {
+            case BehaviorTypeEnum.enthusiastic:
+                EnthusiasticMovement(deltaTime);
+                break;
+            case BehaviorTypeEnum.latecomer:
+                ClignyMovement(deltaTime);
+                break;
+            case BehaviorTypeEnum.clingy:
+                LateComerMovement(deltaTime);
+                break;
+        }
+    }
+
+    private void LateComerMovement(float deltaTime)
+    {
+
+    }
+
+    private void ClignyMovement(float deltaTime)
+    {
+
+    }
+
+    private void EnthusiasticMovement(float deltaTime)
+    {
+
     }
 
     // Look if other bird are in the radius of bird and adding them in neighbour list
