@@ -10,7 +10,7 @@ public class FlyAnimation : MonoBehaviour {
     [SerializeField] private float radius = 15f;                                // Size of circle to fly around
     [SerializeField] private float speed = 1f;                                  // Fly speed
     [Tooltip("Offset in degrees if the model's 'front' does not correspond to +Z (ex: 180 to invert)")]
-    [SerializeField] private float yawOffsetDegrees = 0f;
+    [SerializeField] private float yawOffsetDegrees = 120f;
     [Tooltip("Optional target to orbit around (if null, orbits around starting position")]
     [SerializeField] private GameObject target;
 
@@ -25,7 +25,7 @@ public class FlyAnimation : MonoBehaviour {
     [SerializeField] private float flapSpeed = 0.5f;                            // Flap frequency
 
     [Header("Feathers movement")]
-    [SerializeField] private float featherAmplitude = 5f;                       // Max angle ?
+    [SerializeField] private float featherAmplitude = 40f;                      // Feather max angle
     [SerializeField] private float featherSmooth = 5f;                          // Speed of interpolation
 
     private Vector3 _startPos;                                                  // Starting position (center of circle)

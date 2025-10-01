@@ -195,6 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6458000525628318563}
   - component: {fileID: 8937829741022068847}
+  - component: {fileID: 4176695705937236645}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -232,6 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2892c0ef9ae1dfd4780e6da3e0418efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autonomous: 0
   clockwise: 0
   radius: 15
   speed: 1
@@ -243,8 +245,22 @@ MonoBehaviour:
   rightWing: {fileID: 0}
   flapAmplitude: 30
   flapSpeed: 0.5
-  featherAmplitude: 5
+  featherAmplitude: 40
   featherSmooth: 1
+--- !u!114 &4176695705937236645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2650667614545753490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f6d5be5cc8a4b549847d6e8253eb29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bodyMaterial: {fileID: 2100000, guid: 8f65cc605b026ab4288d486a3e36cb38, type: 2}
+  _featherMaterial: {fileID: 2100000, guid: 8859fadfb2375704090620a997f22d37, type: 2}
 --- !u!1 &3905053586888923118
 GameObject:
   m_ObjectHideFlags: 0
