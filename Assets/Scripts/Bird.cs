@@ -3,19 +3,23 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
-    private FlockManager _flockManager;
+    [Header("Materials")]
+    [SerializeField] private Material _bodyMaterial;
+    [SerializeField] private Material _featherMaterial;
 
-    /*private BehaviorTypeEnum behaviorType;*/
-    protected float _fieldView;
-    protected float _speed;
-    protected Vector3 _direction;
-    protected float _maxVelocity;
+    private bool leader;
+    private FlockManager _manager;
+    private BehaviorTypeEnum behaviorType;
+    private float _fieldView;
+    private float _speed;
+    private Vector3 _direction;
+    private float _maxVelocity;
 
     private List<Bird> _neighbourList;
 
     public void Init(FlockManager flockManager, float fieldView, float speed, float maxVelocity)
     {
-        _flockManager = flockManager;
+        _manager = flockManager;
         _fieldView = fieldView;
         _speed = speed;
         _maxVelocity = maxVelocity;
