@@ -8,7 +8,7 @@ public class Bird : MonoBehaviour
     [SerializeField] private Material _featherMaterial;
 
     private bool leader;
-    private FlockManager _manager;
+    //private FlockManager manager;                                             // L Use for interaction between flocks
     private BehaviorTypeEnum behaviorType;
     private float _fieldView;
     private float _speed;
@@ -17,9 +17,8 @@ public class Bird : MonoBehaviour
 
     private List<Bird> _neighbourList;
 
-    public void Init(FlockManager manager, float fieldView, float speed, float maxVelocity)
+    public void Init(float fieldView, float speed, float maxVelocity)
     {
-        _manager = manager;
         _fieldView = fieldView;
         _speed = speed;
         _maxVelocity = maxVelocity;

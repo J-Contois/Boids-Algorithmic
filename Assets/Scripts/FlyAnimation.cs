@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ! Feathers movement still needs some perfection (right wings feathers move backward)
 public class FlyAnimation : MonoBehaviour {
     [Header("Flying animation")]
     [Tooltip("If false, the object will move within a flock. All arguments below in this section become useless.")]
@@ -32,13 +31,16 @@ public class FlyAnimation : MonoBehaviour {
     private Vector3 _lastPos;
     private Vector3 _direction;                                                 // Current movement direction
 
-    private List<Transform> _Feathers = new List<Transform>();
+    private List<Transform> _Feathers;
+    private Dictionary<Transform, Quaternion> _FeatherRotations;                // To store initial feathers rotations
     private float _currentFeatherAngle = 0f;                                    // Smooth angle
 
     void Start() {
         _startPos = target != null ? target.transform.position : transform.position;
         _lastPos = transform.position;
         _direction = _startPos - _lastPos;
+        _Feathers = new List<Transform>();
+        _FeatherRotations = new Dictionary<Transform, Quaternion>();
 
         if (leftWing == null) {                                                 // Try to find wings by name if not assigned
             GameObject child = transform.Find("Wings")?.gameObject;
@@ -54,31 +56,17 @@ public class FlyAnimation : MonoBehaviour {
 
         foreach (Transform child in GetComponentsInChildren<Transform>())       // Find feathers by name (should be 5)
             if (child.name.Contains("Feathers")) _Feathers.Add(child);
+
+        foreach (var feather in _Feathers)                                      // Store initial rotations
+            _FeatherRotations[feather] = feather.localRotation;
     }
 
     void Update() {
-        // Fly animation
         if (autonomous) flyAnimation();
 
-        // Wings animation
-        if (leftWing != null && rightWing != null) {
-            float flapAngle = Mathf.Sin(Time.time * flapSpeed * Mathf.PI * 2f) * flapAmplitude;
+        wingsAnimation();
 
-            leftWing.localRotation = Quaternion.Euler(0f, 0f, flapAngle);       // Apply local rotation
-            rightWing.localRotation = Quaternion.Euler(0f, 0f, -flapAngle+180f);// Reverse for symmetry
-        }
-
-        // Feathers animation
-        float verticalSpeed = _direction.y / Time.deltaTime;
-        float targetAngle = Mathf.Clamp(-verticalSpeed * featherAmplitude, -featherAmplitude, featherAmplitude);
-        _currentFeatherAngle = Mathf.Lerp(_currentFeatherAngle, targetAngle, Time.deltaTime * featherSmooth);
-
-        foreach (var feather in _Feathers) {
-            bool inverted = Mathf.Abs(Mathf.Round(feather.parent.localEulerAngles.z) - 180f) < 1f;
-            Debug.Log($"{feather.parent.parent} : {inverted}");                 // !!!
-            float appliedAngle = inverted ? -_currentFeatherAngle : _currentFeatherAngle;
-            feather.localRotation = Quaternion.Euler(appliedAngle, 0f, 0f);
-        }
+        feathersAnimation();
     }
 
     private void flyAnimation() {
@@ -104,5 +92,27 @@ public class FlyAnimation : MonoBehaviour {
         }
 
         _lastPos = newPos;
+    }
+
+    private void wingsAnimation() {
+        if (leftWing != null && rightWing != null) {
+            float flapAngle = Mathf.Sin(Time.time * flapSpeed * Mathf.PI * 2f) * flapAmplitude;
+
+            leftWing.localRotation = Quaternion.Euler(0f, 0f, flapAngle);       // Apply local rotation
+            rightWing.localRotation = Quaternion.Euler(0f, 0f, -flapAngle+180f);// Reverse for symmetry
+        }
+    }
+
+    private void feathersAnimation() {
+        float verticalSpeed = _direction.y / Time.deltaTime;
+        float targetAngle = Mathf.Clamp(-verticalSpeed * featherAmplitude, -featherAmplitude, featherAmplitude);
+        _currentFeatherAngle = Mathf.Lerp(_currentFeatherAngle, targetAngle, Time.deltaTime * featherSmooth);
+
+        foreach (var feather in _Feathers) {
+            bool inverted = feather.parent == rightWing;                        // Right wing feathers are inverted
+            float appliedAngle = inverted ? -_currentFeatherAngle : _currentFeatherAngle;
+            Quaternion baseRot = _FeatherRotations[feather];
+            feather.localRotation = baseRot * Quaternion.Euler(appliedAngle, 0f, 0f);
+        }
     }
 }
