@@ -55,7 +55,6 @@ public class Bird : MonoBehaviour
         return barycentre;
     }
 
-
     public virtual void Move(float deltaTime)
     {
         Vector3 velocity = _direction * _speed;
