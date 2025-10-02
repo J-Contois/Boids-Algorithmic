@@ -15,7 +15,7 @@ public class EnthusiasticBehavior : BaseBoidBehavior
         return Color.red;
     }
     
-    public new Vector3 CalculateMovement(Bird bird, float deltaTime)
+    public override Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 baseMovement = base.CalculateMovement(bird, deltaTime);
         

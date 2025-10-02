@@ -27,7 +27,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     }
 
 
-    public Vector3 CalculateMovement(Bird bird, float deltaTime)
+    public virtual Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 cohesion = CalculateCohesion(bird) * CohesionWeight;
         Vector3 separation = CalculateSeparation(bird) * SeparationWeight;
