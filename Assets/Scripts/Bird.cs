@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
-    [Header("Materials")]
+    /*[Header("Materials")]
     [SerializeField] private Material _bodyMaterial;
-    [SerializeField] private Material _featherMaterial;
+    [SerializeField] private Material _featherMaterial;*/
+    
+    private FlockManager _manager;
+    private IBirdBehavior _behavior;
 
     private bool leader;
     //private FlockManager _manager;                                            // L Use for interaction between flocks
@@ -20,6 +23,12 @@ public class Bird : MonoBehaviour
     private int _elongatedWeight;
 
     private List<Bird> _neighbourList;
+    
+    public List<Bird> NeighbourList => _neighbourList;
+    public Vector3 Velocity => _velocity;
+    public float Speed => _speed;
+    public FlockManager Manager => _manager;
+
 
     public void Init(float fieldView, float speed, float maxVelocity, int dense, int loose, int elongated)
     {
@@ -30,13 +39,66 @@ public class Bird : MonoBehaviour
         _denseWeight = dense;
         _looseWeight = loose;
         _elongatedWeight = elongated;
+
+    public void Init(FlockManager flockManager, float fieldView, float speed, float maxVelocity, IBirdBehavior behavior)
+    {
+        _manager = flockManager;
+        _fieldView = fieldView;
+        _speed = speed;
+        _maxVelocity = maxVelocity;
+        _behavior = behavior;
         _neighbourList = new List<Bird>();
+        _velocity = Vector3.zero;
+
+        SetColor(_behavior.GetColor());
     }
+    
+    private void SetColor(Color color)
+    {
+        Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(true);
+
+        foreach (Renderer rend in renderers)
+        {
+            Material[] mats = rend.materials;
+
+            for (int i = 0; i < mats.Length; i++)
+            {
+                /*if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
+                {
+                    mats[i].color = color;
+                }*/
+				mats[i].color = color;
+            }
+
+            rend.materials = mats;
+        }
+    }
+
 
     public void Tick(List<Bird> birdList, float deltaTime)
     {
         NeighbourDetector(birdList);
-        Move(deltaTime);
+        
+        // Behaviour calculates direction
+        Vector3 direction = _behavior.CalculateMovement(this, deltaTime);
+        
+        // Applies the speed
+        _velocity = direction.normalized * _speed;
+        
+        // Limits maximum velocity
+        if (_velocity.magnitude > _maxVelocity)
+        {
+            _velocity = _velocity.normalized * _maxVelocity;
+        }
+
+        // Move the bird
+        transform.position += _velocity * deltaTime;
+        
+        // Directs the bird in the direction of movement
+        if (_velocity.magnitude > 0.1f)
+        {
+            transform.rotation = Quaternion.LookRotation(_velocity);
+        }
     }
 
     // Look if other bird are in the radius of bird and adding them in neighbour list
@@ -54,35 +116,10 @@ public class Bird : MonoBehaviour
                 }
             }
         }
-
-        _direction = Barycentre();
     }
-
-    private Vector3 Barycentre()
+    
+    public void ChangeFlockManager(FlockManager newManager)
     {
-        if (_neighbourList.Count == 0) return transform.position;
-
-        Vector3 sum = Vector3.zero;
-
-        for (int i = 0; i < _neighbourList.Count; i++)
-        {
-            sum += _neighbourList[i].transform.position;
-        }
-
-        Vector3 barycentre = sum / _neighbourList.Count;
-
-        return barycentre;
-    }
-
-    public virtual void Move(float deltaTime)
-    {
-        Vector3 velocity = _direction * _speed;
-
-        if (velocity.magnitude > _maxVelocity)
-        {
-            velocity = velocity.normalized * _maxVelocity;
-        }
-
-        transform.position += velocity * deltaTime;
+        _manager = newManager;
     }
 }
