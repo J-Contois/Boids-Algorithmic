@@ -85,17 +85,19 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     private Vector3 CalculateBoundaryForce(Bird bird)
     {
         SphereCollider zone = manager.getFlightZone();
-        
-        Vector3 offset = bird.transform.position - zone.center;
+
+        Vector3 center = zone.transform.position + zone.center;
+        float radius = zone.radius * zone.transform.lossyScale.x;
+        Vector3 offset = bird.transform.position - center;
         float distance = offset.magnitude;
         
         // If approaching the edge (80% of the radius), force returns to the centre
-        float threshold = zone.radius * 0.8f;
+        float threshold = radius * 0.8f;
         
         if (distance > threshold)
         {
             // The closer you get to the edge, the stronger the force becomes.
-            float strength = (distance - threshold) / (zone.radius - threshold);
+            float strength = (distance - threshold) / (radius - threshold);
             return -offset.normalized * strength;
         }
         
