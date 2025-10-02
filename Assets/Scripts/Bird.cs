@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
