@@ -1,7 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// ! Keep agents inside flight area (does it work ?)
+// Leader : yellow
+// Latecomer : blue
+// Enthusiastic : red
+// Clingy : green
+
+// ! Keep agents inside flight area
+// ! Add range field for flock behaviour
 // I Each flock will have one leader
 // L Add flocks ability to exchange agents
 // L Add agents ability to flee predators and seek food
@@ -53,6 +59,8 @@ public class FlockManager : MonoBehaviour {
         _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
         if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
         _zone.radius = _flightRadius;
+        Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
+        Gizmos.DrawSphere(transform.position, _zone.radius);
     }
 
     void CreateFlock() {
@@ -95,7 +103,7 @@ public class FlockManager : MonoBehaviour {
             case 2:
                 return new ClingyBehavior(this, dense, loose, elongated);
             default:
-                return new EnthusiasticBehavior(this, dense, loose, elongated);
+                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
         }
     }
 
