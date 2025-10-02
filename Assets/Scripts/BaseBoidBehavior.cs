@@ -1,19 +1,38 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BaseBoidBehavior : IBirdBehavior
+public abstract class BaseBoidBehavior : IBirdBehavior
 {
+    protected FlockManager manager;
+    protected int denseCoeff;
+    protected int looseCoeff;
+    protected int elongatedCoeff;
+
     public abstract float CohesionWeight { get; }
     public abstract float SeparationWeight { get; }
     public abstract float AlignmentWeight { get; }
     public abstract Color GetColor();
+
+    public BaseBoidBehavior(FlockManager flockManager, int dense, int loose, int elongated)
+    {
+        manager = flockManager;
+        denseCoeff = dense;
+        looseCoeff = loose;
+        elongatedCoeff = elongated;
+    }
+
+    public void SetManager(FlockManager newManager)
+    {
+        manager = newManager;
+    }
+
 
     public Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 cohesion = CalculateCohesion(bird) * CohesionWeight;
         Vector3 separation = CalculateSeparation(bird) * SeparationWeight;
         Vector3 alignment = CalculateAlignment(bird) * AlignmentWeight;
-        Vector3 bounds = CalculateBoundaryForce(bird, manager) * 2f; // Strong force to remain in the sphere
+        Vector3 bounds = CalculateBoundaryForce(bird) * 2f; // Strong force to remain in the sphere
 
         return cohesion + separation + alignment;
     }
@@ -65,24 +84,20 @@ public class BaseBoidBehavior : IBirdBehavior
     }
     
     // Force required to remain within the constraint sphere
-    protected Vector3 CalculateBoundaryForce(Bird bird, FlockManager manager)
+    protected Vector3 CalculateBoundaryForce(Bird bird)
     {
-        GlobalFlockManager globalManager = manager.GetGlobalManager();
-        if (globalManager == null) return Vector3.zero;
+        SphereCollider zone = manager.getFlightZone();
         
-        Vector3 center = globalManager.GlobalCenter;
-        float radius = globalManager.GlobalBoundaryRadius;
-        
-        Vector3 offset = bird.transform.position - center;
+        Vector3 offset = bird.transform.position - zone.center;
         float distance = offset.magnitude;
         
         // If approaching the edge (80% of the radius), force returns to the centre
-        float threshold = radius * 0.8f;
+        float threshold = zone.radius * 0.8f;
         
         if (distance > threshold)
         {
             // The closer you get to the edge, the stronger the force becomes.
-            float strength = (distance - threshold) / (radius - threshold);
+            float strength = (distance - threshold) / (zone.radius - threshold);
             return -offset.normalized * strength;
         }
         
