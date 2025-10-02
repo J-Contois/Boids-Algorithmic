@@ -8,9 +8,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     protected int looseCoeff;
     protected int elongatedCoeff;
 
-    public abstract float CohesionWeight { get; }
-    public abstract float SeparationWeight { get; }
-    public abstract float AlignmentWeight { get; }
     public abstract Color GetColor();
 
     public BaseBoidBehavior(FlockManager flockManager, int dense, int loose, int elongated)
@@ -29,9 +26,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 
     public virtual Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
-        Vector3 cohesion = CalculateCohesion(bird) * CohesionWeight;
-        Vector3 separation = CalculateSeparation(bird) * SeparationWeight;
-        Vector3 alignment = CalculateAlignment(bird) * AlignmentWeight;
+        Vector3 cohesion = CalculateCohesion(bird) * denseCoeff;
+        Vector3 separation = CalculateSeparation(bird) * looseCoeff;
+        Vector3 alignment = CalculateAlignment(bird) * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f; // Strong force to remain in the sphere
 
         return cohesion + separation + alignment;
