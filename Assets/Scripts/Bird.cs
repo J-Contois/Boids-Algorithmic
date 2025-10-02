@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bird : MonoBehaviour, IEnthusiastic, ILatecomer, IClingy
+public class Bird : MonoBehaviour
 {
     [Header("Materials")]
     [SerializeField] private Material _bodyMaterial;
