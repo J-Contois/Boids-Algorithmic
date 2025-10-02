@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// Leader: follows invisible points in space
+// Leader: fly in random direction
 public class LeaderBehavior : IBirdBehavior
 {
     protected FlockManager manager;

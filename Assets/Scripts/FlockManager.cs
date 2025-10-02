@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// !! Make bird follow leader
 // !! Keep leader inside flight zone
 
 // ! Keep agents inside flight area (does it work ?)
@@ -104,7 +103,7 @@ public class FlockManager : MonoBehaviour {
             case 2:
                 return new ClingyBehavior(this, dense, loose, elongated);
             default:
-                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+                return new EnthusiasticBehavior(this, dense, loose, elongated);
         }
     }
 
