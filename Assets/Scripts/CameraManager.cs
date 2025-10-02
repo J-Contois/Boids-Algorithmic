@@ -3,9 +3,9 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour {
     [SerializeField] private Transform _target;
     [Tooltip("Distance from the leader")]
-    [SerializeField] private float offSet = 10f;
+    [SerializeField] private float offSet = 20f;
     [Tooltip("Speed of camera movement")]
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed = 10f;
     [Tooltip("Speed of camera rotation")]
     [SerializeField] private float rotation = 100f;
 
@@ -54,5 +54,9 @@ public class CameraManager : MonoBehaviour {
         
         transform.Rotate(Vector3.up, yaw * rotation * Time.unscaledDeltaTime, Space.World); 
         transform.Rotate(Vector3.right, pitch * rotation * Time.unscaledDeltaTime, Space.Self);
+    }
+
+    public void SetTarget(Transform target) {
+        _target = target;
     }
 }
