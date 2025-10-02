@@ -8,6 +8,8 @@ public class EnthusiasticBehavior : BaseBoidBehavior
     public override float SeparationWeight => 0.5f;    // Weak separation (hence erratism)
     public override float AlignmentWeight => 0.3f;     // Poor alignment (often changes direction)
 
+    public EnthusiasticBehavior(FlockManager flockManager, int dense, int loose, int elongated) : base(flockManager, dense, loose, elongated) { }
+
     public override Color GetColor()
     {
         return Color.red;

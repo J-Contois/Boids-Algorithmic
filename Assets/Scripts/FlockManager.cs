@@ -36,6 +36,7 @@ public class FlockManager : MonoBehaviour {
 
     private List<Bird> _Agents;
     private GameObject _agentParent;
+    private SphereCollider _zone;
 
     void Start() {
         CreateFlightZone();
@@ -50,11 +51,11 @@ public class FlockManager : MonoBehaviour {
     }
 
     void CreateFlightZone() {
-        SphereCollider zone = gameObject.GetComponent<SphereCollider>();        // Add flight zone component
-        if (zone == null) zone = gameObject.AddComponent<SphereCollider>();
-        zone.radius = _flightRadius;
+        _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
+        if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
+        _zone.radius = _flightRadius;
         Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
-        Gizmos.DrawSphere(transform.position, zone.radius);
+        Gizmos.DrawSphere(transform.position, _zone.radius);
     }
 
     void CreateFlock() {
@@ -66,19 +67,32 @@ public class FlockManager : MonoBehaviour {
         _Agents = new List<Bird>();                                             // Create agents
         _Agents.Add(_agentPrefab);                                              // ! Make it the leader
 
-        for (int i = 1; i < _numberOfAgents; i++)
-        {
+        for (int i = 1; i < _numberOfAgents; i++) {
             Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-            newBoid.Init(_agentSight, _agentSpeed, _agentMaxVelocity);
+            IBirdBehavior behavior = GetRandomBehaviour();
+            newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity, _denseWeight, _looseWeight, _elongatedWeight);
             _Agents.Add(newBoid);
         }
     }
 
-    public float GetCohesion() { return _denseWeight; }
+    private IBirdBehavior GetRandomBehaviour() {
+        int index = Random.Range(0, 4);
 
-    public float GetSeparation() { return _looseWeight; }
+        switch (index) {
+            case 0:
+                return new LeaderBehavior(this);
+            case 1:
+                return new LatecomerBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+            case 2:
+                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+            case 3:
+                return new ClingyBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+            default:
+                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+        }
+    }
 
-    public float GetAlignment() { return _elongatedWeight; }
+    public SphereCollider getFlightZone() { return _zone; }
 }

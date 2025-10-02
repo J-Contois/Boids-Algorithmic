@@ -8,6 +8,8 @@ public class LatecomerBehavior : BaseBoidBehavior
     public override float SeparationWeight => 1.5f;    // Strong tendency to deviate
     public override float AlignmentWeight => 0.4f;     // Poor alignment
 
+    public LatecomerBehavior(FlockManager flockManager, int dense, int loose, int elongated) : base(flockManager, dense, loose, elongated) { }
+
     public override Color GetColor()
     {
         return Color.blue;

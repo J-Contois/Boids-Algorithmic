@@ -4,17 +4,16 @@ using System.Collections.Generic;
 // Leader: follows invisible points in space
 public class LeaderBehavior : IBirdBehavior
 {
-    public override float CohesionWeight => 0.2f;
-    public override float SeparationWeight => 0.8f;
-    public override float AlignmentWeight => 0.1f;
+    protected FlockManager manager;
 
     private float _explorationStrength = 1.5f;
     private float _directionChangeInterval = 3f;
     private Vector3 _currentExplorationDirection;
     private float _lastDirectionChangeTime;
 
-    public LeaderBehavior(List<Vector3> waypoints)
+    public LeaderBehavior(FlockManager newManager)
     {
+        manager = newManager;
         _currentExplorationDirection = Random.onUnitSphere;
         _lastDirectionChangeTime = Time.time;
     }
@@ -24,13 +23,18 @@ public class LeaderBehavior : IBirdBehavior
         return Color.yellow;
     }
 
-    public override Vector3 CalculateMovement(Bird bird, FlockManager manager, float deltaTime)
+    public void SetManager(FlockManager newManager)
     {
-        Vector3 boidForces = base.CalculateMovement(bird, manager, deltaTime);
+        manager = newManager;
+    }
+
+    public Vector3 CalculateMovement(Bird bird, float deltaTime)
+    {
         Vector3 exploration = CalculateExploration(bird);
         
-        return boidForces * 0.3f + exploration * 0.7f;
+        return Vector3.one * 0.3f + exploration * 0.7f;
     }
+
     private Vector3 CalculateExploration(Bird bird)
     {
         if (Time.time - _lastDirectionChangeTime > _directionChangeInterval)
