@@ -66,19 +66,12 @@ public class FlockManager : MonoBehaviour {
         _Agents = new List<Bird>();                                             // Create agents
         _Agents.Add(_agentPrefab);                                              // ! Make it the leader
 
-        for (int i = 1; i < _numberOfAgents; i++)
-        {
+        for (int i = 1; i < _numberOfAgents; i++) {
             Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-            newBoid.Init(_agentSight, _agentSpeed, _agentMaxVelocity);
+            newBoid.Init(_agentSight, _agentSpeed, _agentMaxVelocity, _denseWeight, _looseWeight, _elongatedWeight);
             _Agents.Add(newBoid);
         }
     }
-
-    public float GetCohesion() { return _denseWeight; }
-
-    public float GetSeparation() { return _looseWeight; }
-
-    public float GetAlignment() { return _elongatedWeight; }
 }

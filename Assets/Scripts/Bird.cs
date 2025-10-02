@@ -8,20 +8,28 @@ public class Bird : MonoBehaviour
     [SerializeField] private Material _featherMaterial;
 
     private bool leader;
-    //private FlockManager manager;                                             // L Use for interaction between flocks
+    //private FlockManager _manager;                                            // L Use for interaction between flocks
     private BehaviorTypeEnum behaviorType;
     private float _fieldView;
     private float _speed;
     private Vector3 _direction;
     private float _maxVelocity;
 
+    private int _denseWeight;
+    private int _looseWeight;
+    private int _elongatedWeight;
+
     private List<Bird> _neighbourList;
 
-    public void Init(float fieldView, float speed, float maxVelocity)
+    public void Init(float fieldView, float speed, float maxVelocity, int dense, int loose, int elongated)
     {
+        //_manager = manager;
         _fieldView = fieldView;
         _speed = speed;
         _maxVelocity = maxVelocity;
+        _denseWeight = dense;
+        _looseWeight = loose;
+        _elongatedWeight = elongated;
         _neighbourList = new List<Bird>();
     }
 

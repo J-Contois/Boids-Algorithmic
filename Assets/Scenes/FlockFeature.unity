@@ -460,6 +460,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flock
       objectReference: {fileID: 0}
+    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
+      propertyPath: _flightRadius
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7219374399514268102, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
