@@ -65,29 +65,34 @@ public class FlockManager : MonoBehaviour {
         if (_agentPrefab == null) return;
 
         _Agents = new List<Bird>();                                             // Create agents
-        _Agents.Add(_agentPrefab);                                              // ! Make it the leader
+
+        // Create leader
+        Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
+        Bird leader = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+        IBirdBehavior behavior = new LeaderBehavior(this);
+        float _leaderSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
+        leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
+        _Agents.Add(leader);
 
         for (int i = 1; i < _numberOfAgents; i++) {
-            Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
+            randomPos = Random.insideUnitSphere * _spawnRadius;                 // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-            IBirdBehavior behavior = GetRandomBehaviour();
+            behavior = GetRandomBehaviour();
             newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity);
             _Agents.Add(newBoid);
         }
     }
 
     private IBirdBehavior GetRandomBehaviour() {
-        int index = Random.Range(0, 4);
+        int index = Random.Range(0, 3);
 
         switch (index) {
             case 0:
-                return new LeaderBehavior(this);
-            case 1:
                 return new LatecomerBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
-            case 2:
+            case 1:
                 return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
-            case 3:
+            case 2:
                 return new ClingyBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
             default:
                 return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
