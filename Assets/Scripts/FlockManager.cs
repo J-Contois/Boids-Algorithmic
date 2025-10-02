@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// !! Make bird follow leader
+// !! Keep leader inside flight zone
+// !! Make the birds fly in the right orientation (fly backward)
+
 // ! Keep agents inside flight area (does it work ?)
 // I Each flock will have one leader
 // L Add flocks ability to exchange agents
@@ -70,6 +74,9 @@ public class FlockManager : MonoBehaviour {
         float _leaderSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
         leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
         _Agents.Add(leader);
+
+        CameraManager camera = Camera.main.GetComponent<CameraManager>();
+        if (camera != null) camera.SetTarget(leader.transform);                 // Make camera follow leader
 
         for (int i = 1; i < _numberOfAgents; i++) {
             randomPos = Random.insideUnitSphere * _spawnRadius;                 // Random position in spawn area

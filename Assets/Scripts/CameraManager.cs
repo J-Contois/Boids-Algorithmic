@@ -55,4 +55,8 @@ public class CameraManager : MonoBehaviour {
         transform.Rotate(Vector3.up, yaw * rotation * Time.unscaledDeltaTime, Space.World); 
         transform.Rotate(Vector3.right, pitch * rotation * Time.unscaledDeltaTime, Space.Self);
     }
+
+    public void SetTarget(Transform target) {
+        _target = target;
+    }
 }
