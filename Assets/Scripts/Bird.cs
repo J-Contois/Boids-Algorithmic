@@ -11,6 +11,7 @@ public class Bird : MonoBehaviour
 
     private float _fieldView;
     private float _speed;
+    private Vector3 _direction;
     private Vector3 _velocity;
     private float _maxVelocity;
 
@@ -18,7 +19,6 @@ public class Bird : MonoBehaviour
     
     public List<Bird> NeighbourList => _neighbourList;
     public Vector3 Velocity => _velocity;
-
 
     public void Init(IBirdBehavior behavior, float fieldView, float speed, float maxVelocity)
     {
