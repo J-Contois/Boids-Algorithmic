@@ -3,7 +3,6 @@ using UnityEngine;
 
 // !! Make bird follow leader
 // !! Keep leader inside flight zone
-// !! Make the birds fly in the right orientation (fly backward)
 
 // ! Keep agents inside flight area (does it work ?)
 // I Each flock will have one leader
@@ -34,6 +33,7 @@ public class FlockManager : MonoBehaviour {
 
     private List<Bird> _Agents;
     private GameObject _agentParent;
+    private Bird _leader;
     private SphereCollider _zone;
 
     void Start() {
@@ -71,14 +71,14 @@ public class FlockManager : MonoBehaviour {
 
         // Create leader
         Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
-        Bird leader = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+        _leader = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
         IBirdBehavior behavior = new LeaderBehavior(this);
         float _leaderSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-        leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
-        _Agents.Add(leader);
+        _leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
+        _Agents.Add(_leader);
 
         CameraManager camera = Camera.main.GetComponent<CameraManager>();
-        if (camera != null) camera.SetTarget(leader.transform);                 // Make camera follow leader
+        if (camera != null) camera.SetTarget(_leader.transform);                 // Make camera follow leader
 
         for (int i = 1; i < _numberOfAgents; i++) {
             randomPos = Random.insideUnitSphere * _spawnRadius;                 // Random position in spawn area
@@ -109,4 +109,6 @@ public class FlockManager : MonoBehaviour {
     }
 
     public SphereCollider getFlightZone() { return _zone; }
+
+    public Bird getLeader() { return _leader; }
 }
