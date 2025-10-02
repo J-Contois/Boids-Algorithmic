@@ -72,7 +72,7 @@ public class FlockManager : MonoBehaviour {
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
             IBirdBehavior behavior = GetRandomBehaviour();
-            newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity, _denseWeight, _looseWeight, _elongatedWeight);
+            newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity);
             _Agents.Add(newBoid);
         }
     }

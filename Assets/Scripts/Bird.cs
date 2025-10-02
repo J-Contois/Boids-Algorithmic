@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
@@ -17,10 +15,6 @@ public class Bird : MonoBehaviour
     private Vector3 _velocity;
     private float _maxVelocity;
 
-    private int _denseWeight;
-    private int _looseWeight;
-    private int _elongatedWeight;
-
     private List<Bird> _neighbourList;
     
     public List<Bird> NeighbourList => _neighbourList;
@@ -28,18 +22,13 @@ public class Bird : MonoBehaviour
     public float Speed => _speed;
 
 
-    public void Init(IBirdBehavior behavior, float fieldView, 
-        float speed, float maxVelocity, int dense, int loose, int elongated)
+    public void Init(IBirdBehavior behavior, float fieldView, float speed, float maxVelocity)
     {
         _behavior = behavior;
 
         _fieldView = fieldView;
         _speed = speed;
         _maxVelocity = maxVelocity;
-
-        _denseWeight = dense;
-        _looseWeight = loose;
-        _elongatedWeight = elongated;
 
         _neighbourList = new List<Bird>();
         _velocity = Vector3.zero;
