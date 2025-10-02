@@ -9,6 +9,7 @@ public class Bird : MonoBehaviour
     
     private FlockManager _manager;
     private IBirdBehavior _behavior;
+
     private float _fieldView;
     private float _speed;
     private Vector3 _direction;
@@ -20,8 +21,6 @@ public class Bird : MonoBehaviour
     public Vector3 Velocity => _velocity;
     public float Speed => _speed;
     public FlockManager Manager => _manager;
-
-    
 
     public void Init(FlockManager flockManager, float fieldView, float speed, float maxVelocity, IBirdBehavior behavior)
     {

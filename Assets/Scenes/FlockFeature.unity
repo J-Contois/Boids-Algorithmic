@@ -328,7 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
   offSet: 5
-  speed: 5
+  speed: 10
   rotation: 100
 --- !u!1001 &7135270132412213542
 PrefabInstance:
@@ -443,10 +443,6 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 354704978}
-    - target: {fileID: 8937829741022068847, guid: 41d2ca1922f51f24182d745c9fe225e3, type: 3}
-      propertyPath: autonomous
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
