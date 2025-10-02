@@ -3,6 +3,8 @@ using UnityEngine;
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
+    protected Bird leader;
+
     protected float denseCoeff;
     protected float looseCoeff;
     protected float elongatedCoeff;
@@ -12,6 +14,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
+        leader = manager.getLeader();
         denseCoeff = dense;
         looseCoeff = loose;
         elongatedCoeff = elongated;
@@ -30,7 +33,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 alignment = CalculateAlignment(bird) * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
 
-        return cohesion + separation + alignment;
+        return cohesion + separation + alignment + bounds;
     }
 
     private Vector3 CalculateCohesion(Bird bird)
