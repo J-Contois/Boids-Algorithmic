@@ -57,8 +57,6 @@ public class FlockManager : MonoBehaviour {
         _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
         if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
         _zone.radius = _flightRadius;
-        Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
-        Gizmos.DrawSphere(transform.position, _zone.radius);
     }
 
     void CreateFlock() {

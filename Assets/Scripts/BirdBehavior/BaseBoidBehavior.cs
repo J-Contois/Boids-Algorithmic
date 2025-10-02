@@ -3,8 +3,7 @@ using UnityEngine;
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
-    protected Bird leader;
-
+    
     protected float denseCoeff;
     protected float looseCoeff;
     protected float elongatedCoeff;
@@ -14,7 +13,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
-        leader = manager.getLeader();
         denseCoeff = dense;
         looseCoeff = loose;
         elongatedCoeff = elongated;
