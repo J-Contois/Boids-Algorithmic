@@ -1,10 +1,10 @@
 using UnityEngine;
 
 // Enthousiaste : comportement erratique
-// Cohésion et alignement variables/faibles
 public class EnthusiasticBehavior : BaseBoidBehavior
 {
-    public EnthusiasticBehavior(FlockManager flockManager, int dense, int loose, int elongated) : base(flockManager, dense, loose, elongated) { }
+    public EnthusiasticBehavior(FlockManager flockManager, float dense, float loose, float elongated) : 
+        base(flockManager, dense, loose, elongated) { }
 
     public override Color GetColor()
     {

@@ -3,13 +3,13 @@ using UnityEngine;
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
-    protected int denseCoeff;
-    protected int looseCoeff;
-    protected int elongatedCoeff;
+    protected float denseCoeff;
+    protected float looseCoeff;
+    protected float elongatedCoeff;
 
     public abstract Color GetColor();
 
-    public BaseBoidBehavior(FlockManager flockManager, int dense, int loose, int elongated)
+    public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
         denseCoeff = dense;
@@ -28,12 +28,12 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 cohesion = CalculateCohesion(bird) * denseCoeff;
         Vector3 separation = CalculateSeparation(bird) * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * elongatedCoeff;
-        Vector3 bounds = CalculateBoundaryForce(bird) * 2f; // Strong force to remain in the sphere
+        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
 
         return cohesion + separation + alignment;
     }
 
-    protected Vector3 CalculateCohesion(Bird bird)
+    private Vector3 CalculateCohesion(Bird bird)
     {
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
@@ -47,7 +47,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         return (center - bird.transform.position).normalized;
     }
 
-    protected Vector3 CalculateSeparation(Bird bird)
+    private Vector3 CalculateSeparation(Bird bird)
     {
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
@@ -65,7 +65,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         return separationForce.normalized;
     }
 
-    protected Vector3 CalculateAlignment(Bird bird)
+    private Vector3 CalculateAlignment(Bird bird)
     {
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
@@ -78,9 +78,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 
         return averageVelocity.normalized;
     }
-    
+
     // Force required to remain within the constraint sphere
-    protected Vector3 CalculateBoundaryForce(Bird bird)
+    private Vector3 CalculateBoundaryForce(Bird bird)
     {
         SphereCollider zone = manager.getFlightZone();
         

@@ -23,11 +23,6 @@ public class LeaderBehavior : IBirdBehavior
         return Color.yellow;
     }
 
-    public void SetManager(FlockManager newManager)
-    {
-        manager = newManager;
-    }
-
     public Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 exploration = CalculateExploration(bird);

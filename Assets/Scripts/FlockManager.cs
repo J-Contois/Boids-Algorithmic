@@ -1,13 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Leader : yellow
-// Latecomer : blue
-// Enthusiastic : red
-// Clingy : green
-
-// ! Keep agents inside flight area
-// ! Add range field for flock behaviour
+// ! Keep agents inside flight area (does it work ?)
 // I Each flock will have one leader
 // L Add flocks ability to exchange agents
 // L Add agents ability to flee predators and seek food
@@ -50,12 +44,15 @@ public class FlockManager : MonoBehaviour {
         foreach (var agent in _Agents) agent.Tick(_Agents, Time.deltaTime);
     }
 
+    void OnDrawGizmosSelected() {
+        Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
+        Gizmos.DrawSphere(transform.position, _flightRadius);
+    }
+
     void CreateFlightZone() {
         _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
         if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
         _zone.radius = _flightRadius;
-        Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
-        Gizmos.DrawSphere(transform.position, _zone.radius);
     }
 
     void CreateFlock() {
@@ -65,32 +62,40 @@ public class FlockManager : MonoBehaviour {
         if (_agentPrefab == null) return;
 
         _Agents = new List<Bird>();                                             // Create agents
-        _Agents.Add(_agentPrefab);                                              // ! Make it the leader
+
+        // Create leader
+        Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
+        Bird leader = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+        IBirdBehavior behavior = new LeaderBehavior(this);
+        float _leaderSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
+        leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
+        _Agents.Add(leader);
 
         for (int i = 1; i < _numberOfAgents; i++) {
-            Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;         // Random position in spawn area
+            randomPos = Random.insideUnitSphere * _spawnRadius;                 // Random position in spawn area
             Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
             float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-            IBirdBehavior behavior = GetRandomBehaviour();
+            behavior = GetRandomBehaviour();
             newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity);
             _Agents.Add(newBoid);
         }
     }
 
     private IBirdBehavior GetRandomBehaviour() {
-        int index = Random.Range(0, 4);
+        int index = Random.Range(0, 3);
+        float dense = _denseWeight / 100;
+        float loose = _looseWeight / 100;
+        float elongated = _elongatedWeight / 100;
 
         switch (index) {
             case 0:
-                return new LeaderBehavior(this);
+                return new LatecomerBehavior(this, dense, loose, elongated);
             case 1:
-                return new LatecomerBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+                return new EnthusiasticBehavior(this, dense, loose, elongated);
             case 2:
-                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
-            case 3:
-                return new ClingyBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+                return new ClingyBehavior(this, dense, loose, elongated);
             default:
-                return new EnthusiasticBehavior(this, _denseWeight, _looseWeight, _elongatedWeight);
+                return new EnthusiasticBehavior(this, dense, loose, elongated);
         }
     }
 
