@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
-    [Header("Materials")]
+    /*[Header("Materials")]
     [SerializeField] private Material _bodyMaterial;
-    [SerializeField] private Material _featherMaterial;
+    [SerializeField] private Material _featherMaterial;*/
     
     private FlockManager _manager;
     private IBirdBehavior _behavior;
@@ -33,7 +33,6 @@ public class Bird : MonoBehaviour
         _neighbourList = new List<Bird>();
         _velocity = Vector3.zero;
 
-
         SetColor(_behavior.GetColor());
     }
     
@@ -47,10 +46,11 @@ public class Bird : MonoBehaviour
 
             for (int i = 0; i < mats.Length; i++)
             {
-                if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
+                /*if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
                 {
                     mats[i].color = color;
-                }
+                }*/
+				mats[i].color = color;
             }
 
             rend.materials = mats;
