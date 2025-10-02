@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Enthousiaste : comportement erratique
+// Enthusiastic: erratic behaviour
 public class EnthusiasticBehavior : BaseBoidBehavior
 {
     public EnthusiasticBehavior(FlockManager flockManager, float dense, float loose, float elongated) : 

@@ -22,7 +22,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         manager = newManager;
     }
 
-
     public virtual Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 cohesion = CalculateCohesion(bird) * denseCoeff;
