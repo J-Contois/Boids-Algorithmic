@@ -38,7 +38,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
         Vector3 followLeader = FollowLeader(bird) * 1.5f;
         
-        Debug.Log($"{cohesion} + {separation} + {alignment} + {bounds} + {followLeader}");  // !!!
         return cohesion + separation + alignment + bounds + followLeader;
     }
 
