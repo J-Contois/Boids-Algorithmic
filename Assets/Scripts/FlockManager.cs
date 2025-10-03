@@ -18,8 +18,12 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _spawnRadius = 20f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
     //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
+
+    [Tooltip("How dense the flock while be (close to each other")]
     [SerializeField, Range(0, 100)] private int _denseWeight = 50;
+    [Tooltip("How loose the flock will be (more space between agents)")]
     [SerializeField, Range(0, 100)] private int _looseWeight = 50;
+    [Tooltip("How elongated the flock will be (more eparse than in cluster)")]
     [SerializeField, Range(0, 100)] private int _elongatedWeight = 50;
 
     [Header("Agent Settings")]
@@ -28,7 +32,7 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _agentSight = 10f;
     [SerializeField] private float _agentMinSpeed = 1f;
     [SerializeField] private float _agentMaxSpeed = 10f;
-    [SerializeField] private float _agentMaxVelocity = 100f;
+    [SerializeField] private float _agentMaxVelocity = 20f;
 
     private List<Bird> _Agents;
     private GameObject _agentParent;
@@ -44,7 +48,7 @@ public class FlockManager : MonoBehaviour {
     void Update() {
         if (_Agents == null) return;
 
-        foreach (var agent in _Agents) agent.Tick(_Agents, Time.deltaTime);
+        foreach (var agent in _Agents) agent.Tick(_Agents, _agentMinSpeed, Time.deltaTime);
     }
 
     void OnDrawGizmosSelected() {
@@ -105,7 +109,7 @@ public class FlockManager : MonoBehaviour {
         }
     }
 
-    public SphereCollider getFlightZone() { return _zone; }
+    public SphereCollider GetFlightZone() { return _zone; }
 
-    public Bird getLeader() { return _leader; }
+    public Bird GetLeader() { return _leader; }
 }

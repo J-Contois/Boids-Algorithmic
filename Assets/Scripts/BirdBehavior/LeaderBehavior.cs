@@ -25,24 +25,39 @@ public class LeaderBehavior : IBirdBehavior
 
     public Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
-        Vector3 exploration = CalculateExploration(bird);
+        Vector3 exploration = CalculateExploration();
+        Vector3 boundary = CalculateBoundaryForce(bird);
         
-        return Vector3.one * 0.3f + exploration * 0.7f;
+        return exploration + boundary * 2f;
+    }
+    
+    // Force required to remain within the constraint sphere
+    public Vector3 CalculateBoundaryForce(Bird bird)
+    {
+        SphereCollider zone = manager.GetFlightZone();
+        
+        Vector3 offset = bird.transform.position - (manager.transform.position + zone.center);
+        float distance = offset.magnitude;
+        
+        // If approaching the edge (80% of the radius), force returns to the center
+        float threshold = zone.radius * 0.8f;
+        
+        if (distance > threshold)
+        {
+            // The closer you get to the edge, the stronger the force becomes.
+            float strength = (distance - threshold) / (zone.radius - threshold) * 10f;
+            return -offset.normalized * strength * 5f;
+        }
+        
+        return Vector3.zero;
     }
 
-    private Vector3 CalculateExploration(Bird bird)
-    {
-        if (Time.time - _lastDirectionChangeTime > _directionChangeInterval)
-        {
-            float noiseX = Mathf.PerlinNoise(Time.time * 0.5f, 0f) - 0.5f;
-            float noiseY = Mathf.PerlinNoise(Time.time * 0.5f, 100f) - 0.5f;
-            float noiseZ = Mathf.PerlinNoise(Time.time * 0.5f, 200f) - 0.5f;
-            
-            _currentExplorationDirection = new Vector3(noiseX, noiseY, noiseZ).normalized;
+    private Vector3 CalculateExploration() {
+        if (Time.time - _lastDirectionChangeTime > _directionChangeInterval) {
+            _currentExplorationDirection = Random.onUnitSphere;
             _lastDirectionChangeTime = Time.time;
             _directionChangeInterval = Random.Range(2f, 5f);
         }
-
         return _currentExplorationDirection * _explorationStrength;
     }
 }

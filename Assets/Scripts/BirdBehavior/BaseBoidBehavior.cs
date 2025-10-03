@@ -3,7 +3,6 @@ using UnityEngine;
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
-    protected Bird leader;
 
     protected float denseCoeff = 1f;
     protected float looseCoeff = 1f;
@@ -21,7 +20,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
-        leader = manager.getLeader();
         flockDensity = dense;
         flockLooseness = loose;
         flockElongating = elongated;
@@ -38,8 +36,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
-
-        return cohesion + separation + alignment + bounds;
+        Vector3 followLeader = FollowLeader(bird) * 3f;
+        
+        return cohesion + separation + alignment + bounds + followLeader;
     }
 
     private Vector3 CalculateCohesion(Bird bird)
@@ -53,7 +52,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         }
         center /= bird.NeighbourList.Count;
 
-        return (center - bird.transform.position).normalized;
+        return (center - bird.transform.position);
     }
 
     private Vector3 CalculateSeparation(Bird bird)
@@ -61,17 +60,21 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
         Vector3 separationForce = Vector3.zero;
+        float separationRadius = 200f;
+        
         foreach (Bird neighbour in bird.NeighbourList)
         {
             Vector3 diff = bird.transform.position - neighbour.transform.position;
             float distance = diff.magnitude;
+            
             if (distance > 0)
             {
-                separationForce += diff.normalized / distance;
+                float strength = (separationRadius - distance) / separationRadius;
+                separationForce += diff.normalized * (strength * strength);
             }
         }
 
-        return separationForce.normalized;
+        return separationForce;
     }
 
     private Vector3 CalculateAlignment(Bird bird)
@@ -85,11 +88,11 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         }
         averageVelocity /= bird.NeighbourList.Count;
 
-        return averageVelocity.normalized;
+        return averageVelocity - bird.Velocity;
     }
 
     // Force required to remain within the constraint sphere
-    private Vector3 CalculateBoundaryForce(Bird bird)
+    public Vector3 CalculateBoundaryForce(Bird bird)
     {
         SphereCollider zone = manager.getFlightZone();
 
@@ -109,5 +112,39 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         }
         
         return Vector3.zero;
+    }
+
+    private Vector3 FollowLeader(Bird bird)
+    {
+        Bird leader = manager.GetLeader();
+        
+        if (leader == bird) return Vector3.zero;
+        
+        // Direction towards the leader
+        Vector3 directionToLeader = leader.transform.position - bird.transform.position;
+        float distance = directionToLeader.magnitude;
+        
+        // Ideal distance behind the leader (comfort zone)
+        float idealDistance = 8f;
+        
+        if (distance < idealDistance * 0.5f)
+        {
+            // Too close: repulsive force
+            return -directionToLeader.normalized * (idealDistance - distance);
+        }
+        else if (distance > idealDistance * 2f)
+        {
+            // Too far: strong gravitational pull
+            return directionToLeader.normalized * Mathf.Min(distance - idealDistance, 5f);
+        }
+        else if (distance > idealDistance)
+        {
+            // A bit far: moderate gravitational pull
+            return directionToLeader.normalized * (distance - idealDistance) * 0.5f;
+        }
+        
+        // Dans la zone de confort : pas de force
+        return Vector3.zero;
+        
     }
 }
