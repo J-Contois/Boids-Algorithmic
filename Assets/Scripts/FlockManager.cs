@@ -13,7 +13,7 @@ public class FlockManager : MonoBehaviour {
     [Tooltip("Number of agents in the flock")]
     [SerializeField] private int _numberOfAgents = 20;
     [Tooltip("Size of the area in which agents can move")]
-    [SerializeField] private float _flightRadius = 100f;
+    [SerializeField] private float _flightRadius = 80f;
     [Tooltip("Radius within which agents are spawned")]
     [SerializeField] private float _spawnRadius = 20f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
@@ -38,6 +38,8 @@ public class FlockManager : MonoBehaviour {
     private GameObject _agentParent;
     private Bird _leader;
     private SphereCollider _zone;
+
+    public List<Bird> Agents => _Agents;
 
     void Start() {
         CreateFlightZone();
@@ -98,14 +100,10 @@ public class FlockManager : MonoBehaviour {
         float elongated = _elongatedWeight * 0.01f;
 
         switch (index) {
-            case 0:
-                return new LatecomerBehavior(this, dense, loose, elongated);
-            case 1:
-                return new EnthusiasticBehavior(this, dense, loose, elongated);
-            case 2:
-                return new ClingyBehavior(this, dense, loose, elongated);
-            default:
-                return new NormalBehavior(this, dense, loose, elongated);
+            case 0: return new LatecomerBehavior(this, dense, loose, elongated);
+            case 1: return new EnthusiasticBehavior(this, dense, loose, elongated);
+            case 2: return new ClingyBehavior(this, dense, loose, elongated);
+            default: return new NormalBehavior(this, dense, loose, elongated);
         }
     }
 

@@ -61,7 +61,7 @@ public class LeaderBehavior : IBirdBehavior
         float dot = Vector3.Dot(_currentExplorationDirection, targetDir);
         if (dot < -0.3f) // -1 = completely opposite, 0 = perpendicular
         {
-            // If too far off, slightly ‘turn’ targetDir back towards the current direction
+            // If too far off, slightly â€˜turnâ€™ targetDir back towards the current direction
             targetDir = Vector3.Slerp(targetDir, _currentExplorationDirection, 0.7f);
         }
 

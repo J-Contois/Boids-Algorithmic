@@ -4,7 +4,7 @@ public class CameraManager : MonoBehaviour {
     [Tooltip("Target to follow (free camera mode if target is null)")]
     [SerializeField] private Transform _target;
     [Tooltip("Distance from the target")]
-    [SerializeField] private float offSet = 20f;
+    [SerializeField] private float offSet = 50f;
     [Tooltip("Speed of camera movement")]
     [SerializeField] private float speed = 10f;
     [Tooltip("Speed of camera rotation")]
