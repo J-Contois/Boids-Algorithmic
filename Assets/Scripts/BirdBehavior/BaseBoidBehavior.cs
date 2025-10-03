@@ -3,19 +3,26 @@ using UnityEngine;
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
-    
-    protected float denseCoeff;
-    protected float looseCoeff;
-    protected float elongatedCoeff;
 
-    public abstract Color GetColor();
+    protected float denseCoeff = 1f;
+    protected float looseCoeff = 1f;
+    protected float elongatedCoeff = 1f;
+
+    protected float flockDensity = 0.5f;
+    protected float flockLooseness = 0.5f;
+    protected float flockElongating = 0.5f;
+
+    public virtual Color GetColor()
+    {
+        return Color.wheat;
+    }
 
     public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
-        denseCoeff = dense;
-        looseCoeff = loose;
-        elongatedCoeff = elongated;
+        flockDensity = dense;
+        flockLooseness = loose;
+        flockElongating = elongated;
     }
 
     public void SetManager(FlockManager newManager)
@@ -25,13 +32,13 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 
     public virtual Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
-        Vector3 cohesion = CalculateCohesion(bird) * denseCoeff;
-        Vector3 separation = CalculateSeparation(bird) * looseCoeff;
-        Vector3 alignment = CalculateAlignment(bird) * elongatedCoeff;
-        Vector3 bounds = CalculateBoundaryForce(bird) * 5f;
+        Vector3 cohesion = CalculateCohesion(bird) * flockDensity * denseCoeff;
+        Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
+        Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
+        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
         Vector3 followLeader = FollowLeader(bird) * 3f;
         
-        return cohesion + separation + alignment + bounds + followLeader;;
+        return cohesion + separation + alignment + bounds + followLeader;
     }
 
     private Vector3 CalculateCohesion(Bird bird)
@@ -87,18 +94,20 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     // Force required to remain within the constraint sphere
     public Vector3 CalculateBoundaryForce(Bird bird)
     {
-        SphereCollider zone = manager.GetFlightZone();
-        
-        Vector3 offset = bird.transform.position - (manager.transform.position + zone.center);
+        SphereCollider zone = manager.getFlightZone();
+
+        Vector3 center = zone.transform.position + zone.center;
+        float radius = zone.radius * zone.transform.lossyScale.x;
+        Vector3 offset = bird.transform.position - center;
         float distance = offset.magnitude;
         
-        // If approaching the edge (80% of the radius), force returns to the center
-        float threshold = zone.radius * 0.8f;
+        // If approaching the edge (80% of the radius), force returns to the centre
+        float threshold = radius * 0.8f;
         
         if (distance > threshold)
         {
             // The closer you get to the edge, the stronger the force becomes.
-            float strength = (distance - threshold) / (zone.radius - threshold) * 10f;
+            float strength = (distance - threshold) / (radius - threshold);
             return -offset.normalized * strength;
         }
         

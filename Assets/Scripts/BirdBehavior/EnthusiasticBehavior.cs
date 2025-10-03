@@ -3,6 +3,10 @@ using UnityEngine;
 // Enthusiastic: erratic behaviour
 public class EnthusiasticBehavior : BaseBoidBehavior
 {
+    protected new float denseCoeff = 0.5f;
+    protected new float looseCoeff = 1.0f;
+    protected new float elongatedCoeff = 1.5f;
+
     public EnthusiasticBehavior(FlockManager flockManager, float dense, float loose, float elongated) : 
         base(flockManager, dense, loose, elongated) { }
 
@@ -14,8 +18,8 @@ public class EnthusiasticBehavior : BaseBoidBehavior
     public override Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 baseMovement = base.CalculateMovement(bird, deltaTime);
-        
-        // Adds Perlin noise for erratism
+
+        // Adds Perlin noise for erratism (more fluid than random)
         float noise = Mathf.PerlinNoise(Time.time * 2f, bird.GetInstanceID()) - 0.5f;
         Vector3 randomDir = new Vector3(noise, noise * 0.5f, noise);
         
