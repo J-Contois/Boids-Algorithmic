@@ -94,16 +94,17 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     // Force required to remain within the constraint sphere
     public Vector3 CalculateBoundaryForce(Bird bird)
     {
-        SphereCollider zone = manager.getFlightZone();
+        SphereCollider zone = manager.GetFlightZone();
 
         Vector3 center = zone.transform.position + zone.center;
         float radius = zone.radius * zone.transform.lossyScale.x;
         Vector3 offset = bird.transform.position - center;
+
         float distance = offset.magnitude;
-        
+
         // If approaching the edge (80% of the radius), force returns to the centre
         float threshold = radius * 0.8f;
-        
+
         if (distance > threshold)
         {
             // The closer you get to the edge, the stronger the force becomes.
