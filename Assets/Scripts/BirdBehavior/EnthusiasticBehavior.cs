@@ -22,4 +22,3 @@ public class EnthusiasticBehavior : BaseBoidBehavior
         return baseMovement + randomDir * 0.5f;
     }
 }
-

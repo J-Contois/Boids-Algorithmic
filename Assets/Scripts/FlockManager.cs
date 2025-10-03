@@ -19,8 +19,12 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _spawnRadius = 20f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
     //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
+
+    [Tooltip("How dense the flock while be (close to each other")]
     [SerializeField, Range(0, 100)] private int _denseWeight = 50;
+    [Tooltip("How loose the flock will be (more space between agents)")]
     [SerializeField, Range(0, 100)] private int _looseWeight = 50;
+    [Tooltip("How elongated the flock will be (more eparse than in cluster)")]
     [SerializeField, Range(0, 100)] private int _elongatedWeight = 50;
 
     [Header("Agent Settings")]
