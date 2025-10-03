@@ -59,6 +59,7 @@ public class Bird : MonoBehaviour
         if (_velocity.magnitude < agentMinSpeed)
             _velocity = _velocity.normalized * agentMinSpeed;
 
+        // make movements more fluid
         float maxRadiansDelta = 90f * Mathf.Deg2Rad * deltaTime;
         _velocity = Vector3.RotateTowards(_oldVelocity, _velocity, maxRadiansDelta, float.MaxValue);
         _oldVelocity = _velocity;
