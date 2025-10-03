@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Enthusiastic: erratic behaviour
+// Enthusiastic: erratic behavior
 public class EnthusiasticBehavior : BaseBoidBehavior
 {
     protected override float denseCoeff => 0.2f;
