@@ -29,28 +29,38 @@ public class Bird : MonoBehaviour
         _maxVelocity = maxVelocity;
 
         _neighbourList = new List<Bird>();
-        _velocity = Vector3.zero;
+        _velocity = Random.onUnitSphere * _speed;
 
         SetColor(_behavior.GetColor());
     }
 
 
-    public void Tick(List<Bird> birdList, float deltaTime)
+    public void Tick(List<Bird> birdList, float agentMinSpeed,  float deltaTime)
     {
         NeighbourDetector(birdList);
         
         // Behaviour calculates direction
-        Vector3 direction = _behavior.CalculateMovement(this, deltaTime);
+        Vector3 steeringForce = _behavior.CalculateMovement(this, deltaTime);
         
-        // Applies the speed
-        _velocity = direction.normalized * _speed;
+        // Velocity update
+        _velocity += steeringForce;
+        
+        // Application of drag (air friction) to stabilise movement
+        _velocity *= 0.98f;
         
         // Limits maximum velocity
         if (_velocity.magnitude > _maxVelocity)
         {
             _velocity = _velocity.normalized * _maxVelocity;
         }
+        
+        float currentSpeed = _velocity.magnitude;
+        // Limits minimum velocity
+        _velocity = Vector3.ClampMagnitude(_velocity, _maxVelocity);
 
+        if (_velocity.magnitude < agentMinSpeed)
+            _velocity = _velocity.normalized * agentMinSpeed;
+        
         // Move the bird
         transform.position += _velocity * deltaTime;
         

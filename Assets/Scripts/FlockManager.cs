@@ -29,7 +29,7 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _agentSight = 10f;
     [SerializeField] private float _agentMinSpeed = 1f;
     [SerializeField] private float _agentMaxSpeed = 10f;
-    [SerializeField] private float _agentMaxVelocity = 100f;
+    [SerializeField] private float _agentMaxVelocity = 20f;
 
     private List<Bird> _Agents;
     private GameObject _agentParent;
@@ -45,7 +45,7 @@ public class FlockManager : MonoBehaviour {
     void Update() {
         if (_Agents == null) return;
 
-        foreach (var agent in _Agents) agent.Tick(_Agents, Time.deltaTime);
+        foreach (var agent in _Agents) agent.Tick(_Agents, _agentMinSpeed, Time.deltaTime);
     }
 
     void OnDrawGizmosSelected() {
@@ -90,9 +90,9 @@ public class FlockManager : MonoBehaviour {
 
     private IBirdBehavior GetRandomBehaviour() {
         int index = Random.Range(0, 3);
-        float dense = _denseWeight / 100;
-        float loose = _looseWeight / 100;
-        float elongated = _elongatedWeight / 100;
+        float dense = _denseWeight / 100f;
+        float loose = _looseWeight / 100f;
+        float elongated = _elongatedWeight / 100f;
 
         switch (index) {
             case 0:
@@ -106,7 +106,7 @@ public class FlockManager : MonoBehaviour {
         }
     }
 
-    public SphereCollider getFlightZone() { return _zone; }
+    public SphereCollider GetFlightZone() { return _zone; }
 
-    public Bird getLeader() { return _leader; }
+    public Bird GetLeader() { return _leader; }
 }
