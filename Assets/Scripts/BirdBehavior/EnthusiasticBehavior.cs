@@ -3,9 +3,9 @@ using UnityEngine;
 // Enthusiastic: erratic behaviour
 public class EnthusiasticBehavior : BaseBoidBehavior
 {
-    protected new float denseCoeff = 0.5f;
-    protected new float looseCoeff = 1.0f;
-    protected new float elongatedCoeff = 1.5f;
+    protected override float denseCoeff => 0.5f;
+    protected override float looseCoeff => 1.0f;
+    protected override float elongatedCoeff => 1.5f;
 
     public EnthusiasticBehavior(FlockManager flockManager, float dense, float loose, float elongated) : 
         base(flockManager, dense, loose, elongated) { }

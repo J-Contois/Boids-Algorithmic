@@ -61,4 +61,3 @@ public class LeaderBehavior : IBirdBehavior
         return _currentExplorationDirection * _explorationStrength;
     }
 }
-

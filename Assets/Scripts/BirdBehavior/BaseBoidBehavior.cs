@@ -4,9 +4,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
 
-    protected float denseCoeff = 1f;
-    protected float looseCoeff = 1f;
-    protected float elongatedCoeff = 1f;
+    protected virtual float denseCoeff { get; } = 1f;
+    protected virtual float looseCoeff { get; } = 1f;
+    protected virtual float elongatedCoeff { get; } = 1f;
 
     protected float flockDensity = 0.5f;
     protected float flockLooseness = 0.5f;
@@ -36,8 +36,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
-        Vector3 followLeader = FollowLeader(bird) * 3f;
+        Vector3 followLeader = FollowLeader(bird) * 1.5f;
         
+        Debug.Log($"{cohesion} + {separation} + {alignment} + {bounds} + {followLeader}");  // !!!
         return cohesion + separation + alignment + bounds + followLeader;
     }
 
