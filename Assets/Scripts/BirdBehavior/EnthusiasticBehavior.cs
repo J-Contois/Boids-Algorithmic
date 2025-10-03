@@ -18,12 +18,11 @@ public class EnthusiasticBehavior : BaseBoidBehavior
     public override Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
         Vector3 baseMovement = base.CalculateMovement(bird, deltaTime);
-        
-        // Adds Perlin noise for erratism
+
+        // Adds Perlin noise for erratism (more fluid than random)
         float noise = Mathf.PerlinNoise(Time.time * 2f, bird.GetInstanceID()) - 0.5f;
         Vector3 randomDir = new Vector3(noise, noise * 0.5f, noise);
         
         return baseMovement + randomDir * 0.5f;
     }
 }
-
