@@ -93,19 +93,15 @@ public class FlockManager : MonoBehaviour {
 
     private IBirdBehavior GetRandomBehaviour() {
         int index = Random.Range(0, 4);
-        float dense = _denseWeight / 100;
-        float loose = _looseWeight / 100;
-        float elongated = _elongatedWeight / 100;
+        float dense = _denseWeight * 0.01f;
+        float loose = _looseWeight * 0.01f;
+        float elongated = _elongatedWeight * 0.01f;
 
         switch (index) {
-            case 0:
-                return new LatecomerBehavior(this, dense, loose, elongated);
-            case 1:
-                return new EnthusiasticBehavior(this, dense, loose, elongated);
-            case 2:
-                return new ClingyBehavior(this, dense, loose, elongated);
-            default:
-                return new NormalBehavior(this, dense, loose, elongated);
+            case 0: return new LatecomerBehavior(this, dense, loose, elongated);
+            case 1: return new EnthusiasticBehavior(this, dense, loose, elongated);
+            case 2: return new ClingyBehavior(this, dense, loose, elongated);
+            default: return new NormalBehavior(this, dense, loose, elongated);
         }
     }
 
