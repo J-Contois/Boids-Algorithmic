@@ -36,7 +36,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 cohesion = CalculateCohesion(bird) * flockDensity * denseCoeff;
         Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
-        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
+        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;
         Vector3 followLeader = FollowLeader(bird) * 1f;
 
         Debug.Log("Cohesion : " + cohesion);

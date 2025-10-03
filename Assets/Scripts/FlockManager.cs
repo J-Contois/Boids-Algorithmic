@@ -68,7 +68,7 @@ public class FlockManager : MonoBehaviour {
 
         if (_agentPrefab == null) return;
 
-        _Agents = new List<Bird>();                                             // Create agents
+        _Agents = new List<Bird>();
 
         // Create leader
         Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
@@ -92,7 +92,7 @@ public class FlockManager : MonoBehaviour {
     }
 
     private IBirdBehavior GetRandomBehaviour() {
-        int index = Random.Range(4, 4);
+        int index = Random.Range(0, 4);
         float dense = _denseWeight * 0.01f;
         float loose = _looseWeight * 0.01f;
         float elongated = _elongatedWeight * 0.01f;

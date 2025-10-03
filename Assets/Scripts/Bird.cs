@@ -2,11 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
-{
-    //[Header("Materials")]
-    //[SerializeField] private Material _bodyMaterial;
-    //[SerializeField] private Material _featherMaterial;
-    
+{  
     private IBirdBehavior _behavior;
 
     private float _fieldView;
@@ -87,10 +83,6 @@ public class Bird : MonoBehaviour
 
             for (int i = 0; i < mats.Length; i++)
             {
-                /*if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
-                {
-                    mats[i].color = color;
-                }*/
                 mats[i].color = color;
             }
 
