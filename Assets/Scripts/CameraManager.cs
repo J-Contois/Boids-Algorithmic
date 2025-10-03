@@ -1,8 +1,9 @@
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
+    [Tooltip("Target to follow (free camera mode if target is null)")]
     [SerializeField] private Transform _target;
-    [Tooltip("Distance from the leader")]
+    [Tooltip("Distance from the target")]
     [SerializeField] private float offSet = 20f;
     [Tooltip("Speed of camera movement")]
     [SerializeField] private float speed = 10f;
