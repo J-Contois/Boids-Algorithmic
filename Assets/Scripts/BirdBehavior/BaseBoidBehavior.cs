@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public abstract class BaseBoidBehavior : IBirdBehavior
@@ -38,12 +37,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;
         Vector3 followLeader = FollowLeader(bird) * 1f;
-
-        Debug.Log("Cohesion : " + cohesion);
-        Debug.Log("Separation : " + separation);
-        Debug.Log("Alignement : " + alignment);
-        Debug.Log("Bounds : " + bounds);
-        Debug.Log("Follow : " + followLeader);
 
         return cohesion + separation + alignment + bounds + followLeader;
     }

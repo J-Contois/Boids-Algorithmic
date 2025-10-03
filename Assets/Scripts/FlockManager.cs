@@ -13,7 +13,7 @@ public class FlockManager : MonoBehaviour {
     [Tooltip("Number of agents in the flock")]
     [SerializeField] private int _numberOfAgents = 20;
     [Tooltip("Size of the area in which agents can move")]
-    [SerializeField] private float _flightRadius = 100f;
+    [SerializeField] private float _flightRadius = 80f;
     [Tooltip("Radius within which agents are spawned")]
     [SerializeField] private float _spawnRadius = 20f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
@@ -35,11 +35,18 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float _agentMaxVelocity = 20f;
 
     private List<Bird> _Agents;
+    private Obstacle[] _Obstacles;
     private GameObject _agentParent;
     private Bird _leader;
     private SphereCollider _zone;
 
+    public List<Bird> Agents => _Agents;
+    public Obstacle[] Obstacles => _Obstacles;
+
+    [System.Obsolete]
     void Start() {
+        _Obstacles = FindObjectsOfType<Obstacle>();
+
         CreateFlightZone();
 
         CreateFlock();
@@ -48,7 +55,10 @@ public class FlockManager : MonoBehaviour {
     void Update() {
         if (_Agents == null) return;
 
-        foreach (var agent in _Agents) agent.Tick(_Agents, _agentMinSpeed, Time.deltaTime);
+        foreach (var agent in _Agents) {
+            Vector3 force = GetObstaclesForce(agent);
+            agent.Tick(_Agents, force, _agentMinSpeed, Time.deltaTime);
+        }
     }
 
     void OnDrawGizmosSelected() {
@@ -98,15 +108,19 @@ public class FlockManager : MonoBehaviour {
         float elongated = _elongatedWeight * 0.01f;
 
         switch (index) {
-            case 0:
-                return new LatecomerBehavior(this, dense, loose, elongated);
-            case 1:
-                return new EnthusiasticBehavior(this, dense, loose, elongated);
-            case 2:
-                return new ClingyBehavior(this, dense, loose, elongated);
-            default:
-                return new NormalBehavior(this, dense, loose, elongated);
+            case 0: return new LatecomerBehavior(this, dense, loose, elongated);
+            case 1: return new EnthusiasticBehavior(this, dense, loose, elongated);
+            case 2: return new ClingyBehavior(this, dense, loose, elongated);
+            default: return new NormalBehavior(this, dense, loose, elongated);
         }
+    }
+
+    public Vector3 GetObstaclesForce(Bird bird) {
+        Vector3 force = Vector3.zero;
+        foreach (var obstacle in _Obstacles) {
+            force += obstacle.GetRepulsionForce(bird);
+        }
+        return force;
     }
 
     public SphereCollider GetFlightZone() { return _zone; }
