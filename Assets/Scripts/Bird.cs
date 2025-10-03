@@ -33,14 +33,15 @@ public class Bird : MonoBehaviour
     }
 
 
-    public void Tick(List<Bird> birdList, float agentMinSpeed,  float deltaTime)
+    public void Tick(List<Bird> birdList, Vector3 repulsionForce, float agentMinSpeed,  float deltaTime)
     {
         NeighbourDetector(birdList);
         
         // Behaviour calculates direction
         Vector3 steeringForce = _behavior.CalculateMovement(this, deltaTime);
-        
+
         // Velocity update
+        _velocity += repulsionForce;
         _velocity += steeringForce;
         
         // Application of drag (air friction) to stabilise movement

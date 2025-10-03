@@ -39,12 +39,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;
         Vector3 followLeader = FollowLeader(bird) * 1f;
 
-        Debug.Log("Cohesion : " + cohesion);
-        Debug.Log("Separation : " + separation);
-        Debug.Log("Alignement : " + alignment);
-        Debug.Log("Bounds : " + bounds);
-        Debug.Log("Follow : " + followLeader);
-
         return cohesion + separation + alignment + bounds + followLeader;
     }
 
