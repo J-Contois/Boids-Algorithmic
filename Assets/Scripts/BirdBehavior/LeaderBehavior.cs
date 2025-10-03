@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 // Leader: fly in random direction
 public class LeaderBehavior : IBirdBehavior
 {
-    protected FlockManager manager;
+    private FlockManager manager;
 
     private float _explorationStrength = 1.5f;
     private Vector3 _currentExplorationDirection;
