@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
-    private float strength = 100f;                                               // Repulsion force
+    private float strength = 20f;                                               // Repulsion force
     private float radius;
 
     void Start() {
         radius = GetComponent<SphereCollider>().radius;                         // Get radius from collider
-        radius += 10f;                                                          // Make effect zone larger than collider
+        radius *= transform.localScale.x;
+        radius += 2f;                                                          // Make effect zone larger than collider
     }
 
     public Vector3 GetRepulsionForce(Bird bird) {
