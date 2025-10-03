@@ -108,4 +108,8 @@ public class Bird : MonoBehaviour
             }
         }
     }
+
+    public void AddForce(Vector3 force) {
+        _velocity += force;
+    }
 }

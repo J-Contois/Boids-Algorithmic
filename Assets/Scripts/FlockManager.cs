@@ -39,6 +39,8 @@ public class FlockManager : MonoBehaviour {
     private Bird _leader;
     private SphereCollider _zone;
 
+    public List<Bird> Agents => _Agents;
+
     void Start() {
         CreateFlightZone();
 
