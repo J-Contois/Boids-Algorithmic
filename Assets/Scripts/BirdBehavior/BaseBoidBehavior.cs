@@ -5,19 +5,26 @@ public abstract class BaseBoidBehavior : IBirdBehavior
     protected FlockManager manager;
     protected Bird leader;
 
-    protected float denseCoeff;
-    protected float looseCoeff;
-    protected float elongatedCoeff;
+    protected float denseCoeff = 1f;
+    protected float looseCoeff = 1f;
+    protected float elongatedCoeff = 1f;
 
-    public abstract Color GetColor();
+    protected float flockDensity = 0.5f;
+    protected float flockLooseness = 0.5f;
+    protected float flockElongating = 0.5f;
+
+    public virtual Color GetColor()
+    {
+        return Color.wheat;
+    }
 
     public BaseBoidBehavior(FlockManager flockManager, float dense, float loose, float elongated)
     {
         manager = flockManager;
         leader = manager.getLeader();
-        denseCoeff = dense;
-        looseCoeff = loose;
-        elongatedCoeff = elongated;
+        flockDensity = dense;
+        flockLooseness = loose;
+        flockElongating = elongated;
     }
 
     public void SetManager(FlockManager newManager)
@@ -27,9 +34,9 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 
     public virtual Vector3 CalculateMovement(Bird bird, float deltaTime)
     {
-        Vector3 cohesion = CalculateCohesion(bird) * denseCoeff;
-        Vector3 separation = CalculateSeparation(bird) * looseCoeff;
-        Vector3 alignment = CalculateAlignment(bird) * elongatedCoeff;
+        Vector3 cohesion = CalculateCohesion(bird) * flockDensity * denseCoeff;
+        Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
+        Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
 
         return cohesion + separation + alignment + bounds;
