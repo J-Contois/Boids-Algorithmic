@@ -108,7 +108,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
 
         float distance = offset.magnitude;
 
-        // If approaching the edge (80% of the radius), force returns to the centre
+        // If approaching the edge (80% of the radius), force returns to the center
         float threshold = radius * 0.8f;
 
         if (distance > threshold)
