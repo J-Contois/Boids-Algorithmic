@@ -1,12 +1,13 @@
+using System;
 using UnityEngine;
 
 public abstract class BaseBoidBehavior : IBirdBehavior
 {
     protected FlockManager manager;
 
-    protected float denseCoeff = 1f;
-    protected float looseCoeff = 1f;
-    protected float elongatedCoeff = 1f;
+    protected virtual float denseCoeff { get; } = 1f;
+    protected virtual float looseCoeff { get; } = 1f;
+    protected virtual float elongatedCoeff { get; } = 1f;
 
     protected float flockDensity = 0.5f;
     protected float flockLooseness = 0.5f;
@@ -36,8 +37,14 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
         Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
-        Vector3 followLeader = FollowLeader(bird) * 3f;
-        
+        Vector3 followLeader = FollowLeader(bird) * 1f;
+
+        Debug.Log("Cohesion : " + cohesion);
+        Debug.Log("Separation : " + separation);
+        Debug.Log("Alignement : " + alignment);
+        Debug.Log("Bounds : " + bounds);
+        Debug.Log("Follow : " + followLeader);
+
         return cohesion + separation + alignment + bounds + followLeader;
     }
 
@@ -60,7 +67,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
         Vector3 separationForce = Vector3.zero;
-        float separationRadius = 200f;
         
         foreach (Bird neighbour in bird.NeighbourList)
         {
@@ -69,7 +75,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
             
             if (distance > 0)
             {
-                float strength = (separationRadius - distance) / separationRadius;
+                float strength = (bird.FieldView - distance) / bird.FieldView;
                 separationForce += diff.normalized * (strength * strength);
             }
         }

@@ -11,12 +11,13 @@ public class Bird : MonoBehaviour
 
     private float _fieldView;
     private float _speed;
-    private Vector3 _direction;
     private Vector3 _velocity;
     private float _maxVelocity;
+    private Vector3 _oldVelocity;
 
     private List<Bird> _neighbourList;
-    
+
+    public float FieldView => _fieldView;
     public List<Bird> NeighbourList => _neighbourList;
     public Vector3 Velocity => _velocity;
 
@@ -30,6 +31,7 @@ public class Bird : MonoBehaviour
 
         _neighbourList = new List<Bird>();
         _velocity = Random.onUnitSphere * _speed;
+        _oldVelocity = Vector3.zero;
 
         SetColor(_behavior.GetColor());
     }
@@ -60,6 +62,10 @@ public class Bird : MonoBehaviour
 
         if (_velocity.magnitude < agentMinSpeed)
             _velocity = _velocity.normalized * agentMinSpeed;
+
+        float maxRadiansDelta = 90f * Mathf.Deg2Rad * deltaTime;
+        _velocity = Vector3.RotateTowards(_oldVelocity, _velocity, maxRadiansDelta, float.MaxValue);
+        _oldVelocity = _velocity;
         
         // Move the bird
         transform.position += _velocity * deltaTime;

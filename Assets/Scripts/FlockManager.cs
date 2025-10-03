@@ -29,7 +29,7 @@ public class FlockManager : MonoBehaviour {
     [Header("Agent Settings")]
     [SerializeField] private Bird _agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
-    [SerializeField] private float _agentSight = 10f;
+    [SerializeField] private float _agentSight = 30f;
     [SerializeField] private float _agentMinSpeed = 1f;
     [SerializeField] private float _agentMaxSpeed = 10f;
     [SerializeField] private float _agentMaxVelocity = 20f;
@@ -92,10 +92,10 @@ public class FlockManager : MonoBehaviour {
     }
 
     private IBirdBehavior GetRandomBehaviour() {
-        int index = Random.Range(0, 4);
-        float dense = _denseWeight / 100;
-        float loose = _looseWeight / 100;
-        float elongated = _elongatedWeight / 100;
+        int index = Random.Range(4, 4);
+        float dense = _denseWeight * 0.01f;
+        float loose = _looseWeight * 0.01f;
+        float elongated = _elongatedWeight * 0.01f;
 
         switch (index) {
             case 0:
