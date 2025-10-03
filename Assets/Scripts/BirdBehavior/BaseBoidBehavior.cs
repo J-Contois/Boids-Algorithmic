@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class BaseBoidBehavior : IBirdBehavior
@@ -35,9 +36,15 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 cohesion = CalculateCohesion(bird) * flockDensity * denseCoeff;
         Vector3 separation = CalculateSeparation(bird) * flockLooseness * looseCoeff;
         Vector3 alignment = CalculateAlignment(bird) * flockElongating * elongatedCoeff;
-        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;                     // Strong force to remain in the sphere
-        Vector3 followLeader = FollowLeader(bird) * 1.5f;
-        
+        Vector3 bounds = CalculateBoundaryForce(bird) * 2f;
+        Vector3 followLeader = FollowLeader(bird) * 1f;
+
+        Debug.Log("Cohesion : " + cohesion);
+        Debug.Log("Separation : " + separation);
+        Debug.Log("Alignement : " + alignment);
+        Debug.Log("Bounds : " + bounds);
+        Debug.Log("Follow : " + followLeader);
+
         return cohesion + separation + alignment + bounds + followLeader;
     }
 
@@ -60,7 +67,6 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         if (bird.NeighbourList.Count == 0) return Vector3.zero;
 
         Vector3 separationForce = Vector3.zero;
-        float separationRadius = 200f;
         
         foreach (Bird neighbour in bird.NeighbourList)
         {
@@ -69,7 +75,7 @@ public abstract class BaseBoidBehavior : IBirdBehavior
             
             if (distance > 0)
             {
-                float strength = (separationRadius - distance) / separationRadius;
+                float strength = (bird.FieldView - distance) / bird.FieldView;
                 separationForce += diff.normalized * (strength * strength);
             }
         }
@@ -99,11 +105,12 @@ public abstract class BaseBoidBehavior : IBirdBehavior
         Vector3 center = zone.transform.position + zone.center;
         float radius = zone.radius * zone.transform.lossyScale.x;
         Vector3 offset = bird.transform.position - center;
+
         float distance = offset.magnitude;
-        
-        // If approaching the edge (80% of the radius), force returns to the centre
+
+        // If approaching the edge (80% of the radius), force returns to the center
         float threshold = radius * 0.8f;
-        
+
         if (distance > threshold)
         {
             // The closer you get to the edge, the stronger the force becomes.

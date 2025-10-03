@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
-  offSet: 20
+  offSet: 40
   speed: 10
   rotation: 100
 --- !u!1001 &776478405
@@ -456,28 +456,16 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
+      propertyPath: _agentSight
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
       propertyPath: _agentPrefab
       value: 
       objectReference: {fileID: 1811614820706336877, guid: c331dc921f995754489ce1c155ba826a, type: 3}
     - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
-      propertyPath: _denseWeight
-      value: 76
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
-      propertyPath: _looseWeight
-      value: 23
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
       propertyPath: _flightRadius
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
-      propertyPath: _numberOfAgents
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
-      propertyPath: _elongatedWeight
-      value: 100
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7219374399514268102, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
       propertyPath: m_LocalPosition.x

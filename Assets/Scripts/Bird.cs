@@ -2,21 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
-{
-    //[Header("Materials")]
-    //[SerializeField] private Material _bodyMaterial;
-    //[SerializeField] private Material _featherMaterial;
-    
+{  
     private IBirdBehavior _behavior;
 
     private float _fieldView;
     private float _speed;
-    private Vector3 _direction;
     private Vector3 _velocity;
     private float _maxVelocity;
+    private Vector3 _oldVelocity;
 
     private List<Bird> _neighbourList;
-    
+
+    public float FieldView => _fieldView;
     public List<Bird> NeighbourList => _neighbourList;
     public Vector3 Velocity => _velocity;
 
@@ -30,6 +27,7 @@ public class Bird : MonoBehaviour
 
         _neighbourList = new List<Bird>();
         _velocity = Random.onUnitSphere * _speed;
+        _oldVelocity = Vector3.zero;
 
         SetColor(_behavior.GetColor());
     }
@@ -60,6 +58,11 @@ public class Bird : MonoBehaviour
 
         if (_velocity.magnitude < agentMinSpeed)
             _velocity = _velocity.normalized * agentMinSpeed;
+
+        // make movements more fluid
+        float maxRadiansDelta = 90f * Mathf.Deg2Rad * deltaTime;
+        _velocity = Vector3.RotateTowards(_oldVelocity, _velocity, maxRadiansDelta, float.MaxValue);
+        _oldVelocity = _velocity;
         
         // Move the bird
         transform.position += _velocity * deltaTime;
@@ -81,10 +84,6 @@ public class Bird : MonoBehaviour
 
             for (int i = 0; i < mats.Length; i++)
             {
-                /*if (mats[i] == _bodyMaterial || mats[i] == _featherMaterial)
-                {
-                    mats[i].color = color;
-                }*/
                 mats[i].color = color;
             }
 

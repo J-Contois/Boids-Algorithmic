@@ -29,7 +29,7 @@ public class FlockManager : MonoBehaviour {
     [Header("Agent Settings")]
     [SerializeField] private Bird _agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
-    [SerializeField] private float _agentSight = 10f;
+    [SerializeField] private float _agentSight = 30f;
     [SerializeField] private float _agentMinSpeed = 1f;
     [SerializeField] private float _agentMaxSpeed = 10f;
     [SerializeField] private float _agentMaxVelocity = 20f;
@@ -70,7 +70,7 @@ public class FlockManager : MonoBehaviour {
 
         if (_agentPrefab == null) return;
 
-        _Agents = new List<Bird>();                                             // Create agents
+        _Agents = new List<Bird>();
 
         // Create leader
         Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
