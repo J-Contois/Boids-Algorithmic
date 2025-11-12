@@ -1,40 +1,42 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-public class ReplaceWithPrefab : EditorWindow {
-    private GameObject prefab;
+namespace Tools {
+    public class ReplaceWithPrefab : EditorWindow {
+        private GameObject prefab;
 
-    [MenuItem("Tools/Replace With Prefab")]
-    private static void ShowWindow() {
-        GetWindow<ReplaceWithPrefab>("Replace With Prefab");
-    }
-
-    private void OnGUI() {
-        GUILayout.Label("Select prefab to replace with", EditorStyles.boldLabel);
-        prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
-
-        if (GUILayout.Button("Replace Selected") && prefab != null) {
-            ReplaceSelected(prefab);
+        [MenuItem("Tools/Replace With Prefab")]
+        private static void ShowWindow() {
+            GetWindow<ReplaceWithPrefab>("Replace With Prefab");
         }
-    }
 
-    private void ReplaceSelected(GameObject prefab) {
-        foreach (GameObject go in Selection.gameObjects) {
-            // Sauvegarde la transformation
-            Vector3 pos = go.transform.position;
-            Quaternion rot = go.transform.rotation;
-            Vector3 scale = go.transform.localScale;
-            Transform parent = go.transform.parent;
+        private void OnGUI() {
+            GUILayout.Label("Select prefab to replace with", EditorStyles.boldLabel);
+            prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), false);
 
-            // Supprime l'ancien objet
-            Undo.DestroyObjectImmediate(go);
+            if (GUILayout.Button("Replace Selected") && prefab != null) {
+                ReplaceSelected(prefab);
+            }
+        }
 
-            // Crée une instance du prefab
-            GameObject newObj = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parent);
-            newObj.transform.SetPositionAndRotation(pos, rot);
-            newObj.transform.localScale = scale;
+        private void ReplaceSelected(GameObject prefabObject) {
+            foreach (GameObject go in Selection.gameObjects) {
+                // Sauvegarde la transformation
+                Vector3 pos = go.transform.position;
+                Quaternion rot = go.transform.rotation;
+                Vector3 scale = go.transform.localScale;
+                Transform parent = go.transform.parent;
 
-            Undo.RegisterCreatedObjectUndo(newObj, "Replace With Prefab");
+                // Supprime l'ancien objet
+                Undo.DestroyObjectImmediate(go);
+
+                // CrÃ©e une instance du prefab
+                GameObject newObj = (GameObject)PrefabUtility.InstantiatePrefab(prefabObject, parent);
+                newObj.transform.SetPositionAndRotation(pos, rot);
+                newObj.transform.localScale = scale;
+
+                Undo.RegisterCreatedObjectUndo(newObj, "Replace With Prefab");
+            }
         }
     }
 }

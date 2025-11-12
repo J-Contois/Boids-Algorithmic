@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65151d2917025b498b5f303e932248e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 0}
+  target: {fileID: 0}
   offSet: 40
   speed: 10
   rotation: 100
@@ -575,6 +575,10 @@ PrefabInstance:
       propertyPath: _agentSight
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
+      propertyPath: agentPrefab
+      value: 
+      objectReference: {fileID: 1811614820706336877, guid: c331dc921f995754489ce1c155ba826a, type: 3}
     - target: {fileID: 5387257943523932799, guid: 4a824859f24a74946a2e63ba4e7dc6cc, type: 3}
       propertyPath: _agentPrefab
       value: 

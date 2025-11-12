@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using BirdBehavior;
 using UnityEngine;
 
-public class Bird : MonoBehaviour
-{  
+public class Bird : MonoBehaviour {  
     private IBirdBehavior _behavior;
 
     private float _fieldView;
@@ -17,8 +17,7 @@ public class Bird : MonoBehaviour
     public List<Bird> NeighbourList => _neighbourList;
     public Vector3 Velocity => _velocity;
 
-    public void Init(IBirdBehavior behavior, float fieldView, float speed, float maxVelocity)
-    {
+    public void Init(IBirdBehavior behavior, float fieldView, float speed, float maxVelocity) {
         _behavior = behavior;
 
         _fieldView = fieldView;
@@ -33,12 +32,11 @@ public class Bird : MonoBehaviour
     }
 
 
-    public void Tick(List<Bird> birdList, Vector3 repulsionForce, float agentMinSpeed,  float deltaTime)
-    {
+    public void Tick(List<Bird> birdList, Vector3 repulsionForce, float agentMinSpeed,  float deltaTime) {
         NeighbourDetector(birdList);
         
         // Behaviour calculates direction
-        Vector3 steeringForce = _behavior.CalculateMovement(this, deltaTime);
+        Vector3 steeringForce = _behavior.CalculateMovement(this);
 
         // Velocity update
         _velocity += repulsionForce;
@@ -48,12 +46,8 @@ public class Bird : MonoBehaviour
         _velocity *= 0.98f;
         
         // Limits maximum velocity
-        if (_velocity.magnitude > _maxVelocity)
-        {
-            _velocity = _velocity.normalized * _maxVelocity;
-        }
-        
-        float currentSpeed = _velocity.magnitude;
+        if (_velocity.magnitude > _maxVelocity) _velocity = _velocity.normalized * _maxVelocity;
+
         // Limits minimum velocity
         _velocity = Vector3.ClampMagnitude(_velocity, _maxVelocity);
 
@@ -69,47 +63,28 @@ public class Bird : MonoBehaviour
         transform.position += _velocity * deltaTime;
         
         // Directs the bird in the direction of movement
-        if (_velocity.magnitude > 0.1f)
-        {
-            transform.rotation = Quaternion.LookRotation(_velocity);
-        }
+        if (_velocity.magnitude > 0.1f) transform.rotation = Quaternion.LookRotation(_velocity);
     }
 
-    private void SetColor(Color color)
-    {
+    private void SetColor(Color color) {
         Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(true);
 
-        foreach (Renderer rend in renderers)
-        {
+        foreach (Renderer rend in renderers) {
             Material[] mats = rend.materials;
 
-            for (int i = 0; i < mats.Length; i++)
-            {
-                mats[i].color = color;
-            }
+            foreach (var t in mats) t.color = color;
 
             rend.materials = mats;
         }
     }
 
     // Look if other bird are in the radius of bird and adding them in neighbour list
-    public void NeighbourDetector(List<Bird> birdList)
-    {
+    private void NeighbourDetector(List<Bird> birdList) {
         if (birdList.Count == 0) return;
 
         _neighbourList.Clear();
-        for (int i = 0; i < birdList.Count; i++)
-        {
-            if (birdList[i] != this)
-            {
-                if (Vector3.Distance(transform.position, birdList[i].transform.position) <= _fieldView) {
-                    _neighbourList.Add(birdList[i]);
-                }
-            }
-        }
-    }
-
-    public void AddForce(Vector3 force) {
-        _velocity += force;
+        foreach (var bird in birdList)
+            if (bird != this && Vector3.Distance(transform.position, bird.transform.position) <= _fieldView)
+                _neighbourList.Add(bird);
     }
 }

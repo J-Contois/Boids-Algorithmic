@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BirdBehavior;
 using UnityEngine;
 
 // !! Keep leader inside flight zone
@@ -11,41 +12,37 @@ using UnityEngine;
 public class FlockManager : MonoBehaviour {
     [Header("Flock Settings")]
     [Tooltip("Number of agents in the flock")]
-    [SerializeField] private int _numberOfAgents = 20;
+    [SerializeField] private int numberOfAgents = 20;
     [Tooltip("Size of the area in which agents can move")]
-    [SerializeField] private float _flightRadius = 80f;
+    [SerializeField] private float flightRadius = 80f;
     [Tooltip("Radius within which agents are spawned")]
-    [SerializeField] private float _spawnRadius = 20f;
+    [SerializeField] private float spawnRadius = 20f;
     //[Tooltip("Distance within which an agent will be considered separated from his flock")]
-    //[SerializeField] private float separationRadius = 10f;                    // [later] When'll use several flock script
+    //[SerializeField] private float separationRadius = 10f;                    // [later] When will use several flock script
 
     [Tooltip("How dense the flock while be (close to each other")]
-    [SerializeField, Range(0, 100)] private int _denseWeight = 50;
+    [SerializeField, Range(0, 100)] private int denseWeight = 50;
     [Tooltip("How loose the flock will be (more space between agents)")]
-    [SerializeField, Range(0, 100)] private int _looseWeight = 50;
+    [SerializeField, Range(0, 100)] private int looseWeight = 50;
     [Tooltip("How elongated the flock will be (more eparse than in cluster)")]
-    [SerializeField, Range(0, 100)] private int _elongatedWeight = 50;
+    [SerializeField, Range(0, 100)] private int elongatedWeight = 50;
 
     [Header("Agent Settings")]
-    [SerializeField] private Bird _agentPrefab;
+    [SerializeField] private Bird agentPrefab;
     [Tooltip("Distance within which an agent can see other agents")]
-    [SerializeField] private float _agentSight = 30f;
-    [SerializeField] private float _agentMinSpeed = 1f;
-    [SerializeField] private float _agentMaxSpeed = 10f;
-    [SerializeField] private float _agentMaxVelocity = 20f;
+    [SerializeField] private float agentSight = 30f;
+    [SerializeField] private float agentMinSpeed = 1f;
+    [SerializeField] private float agentMaxSpeed = 10f;
+    [SerializeField] private float agentMaxVelocity = 20f;
 
-    private List<Bird> _Agents;
-    private Obstacle[] _Obstacles;
+    private List<Bird> agents;
+    private Obstacle[] obstacles;
     private GameObject _agentParent;
     private Bird _leader;
     private SphereCollider _zone;
 
-    public List<Bird> Agents => _Agents;
-    public Obstacle[] Obstacles => _Obstacles;
-
-    [System.Obsolete]
     void Start() {
-        _Obstacles = FindObjectsOfType<Obstacle>();
+        obstacles = FindObjectsByType<Obstacle>(FindObjectsSortMode.None);
 
         CreateFlightZone();
 
@@ -53,59 +50,61 @@ public class FlockManager : MonoBehaviour {
     }
 
     void Update() {
-        if (_Agents == null) return;
+        if (agents == null) return;
 
-        foreach (var agent in _Agents) {
+        foreach (var agent in agents) {
             Vector3 force = GetObstaclesForce(agent);
-            agent.Tick(_Agents, force, _agentMinSpeed, Time.deltaTime);
+            agent.Tick(agents, force, agentMinSpeed, Time.deltaTime);
         }
     }
 
     void OnDrawGizmosSelected() {
         Gizmos.color = new Color(0f, 0.5f, 1f, 0.2f);
-        Gizmos.DrawSphere(transform.position, _flightRadius);
+        Gizmos.DrawSphere(transform.position, flightRadius);
     }
 
     void CreateFlightZone() {
         _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
         if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
-        _zone.radius = _flightRadius;
+        _zone.radius = flightRadius;
     }
 
     void CreateFlock() {
-        _agentParent = new GameObject("AllAgents");                             // Create empty GameObject to hold all agents
-        _agentParent.transform.parent = transform;                              // Inside self
+        _agentParent = new GameObject("AllAgents") {
+            transform = { parent = transform }};                                // Create parent inside self to hold all agents
 
-        if (_agentPrefab == null) return;
+        if (!agentPrefab) return;
 
-        _Agents = new List<Bird>();
+        agents = new List<Bird>();
 
         // Create leader
-        Vector3 randomPos = Random.insideUnitSphere * _spawnRadius;             // Random position in spawn area
-        _leader = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+        Vector3 randomPos = Random.insideUnitSphere * spawnRadius;             // Random position in spawn area
+        _leader = Instantiate(agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
         IBirdBehavior behavior = new LeaderBehavior(this);
-        float _leaderSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
-        _leader.Init(behavior, _agentSight, _leaderSpeed, _agentMaxVelocity);
-        _Agents.Add(_leader);
+        float leaderSpeed = Random.Range(agentMinSpeed, agentMaxSpeed);
+        _leader.Init(behavior, agentSight, leaderSpeed, agentMaxVelocity);
+        agents.Add(_leader);
 
-        CameraManager camera = Camera.main.GetComponent<CameraManager>();
-        if (camera != null) camera.SetTarget(_leader.transform);                 // Make camera follow leader
+        if (Camera.main) {
+            CameraManager cameraManager = Camera.main.GetComponent<CameraManager>();
+            if (cameraManager) cameraManager.SetTarget(_leader.transform);      // Make camera follow leader
+        }
 
-        for (int i = 1; i < _numberOfAgents; i++) {
-            randomPos = Random.insideUnitSphere * _spawnRadius;                 // Random position in spawn area
-            Bird newBoid = Instantiate(_agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
-            float _agentSpeed = Random.Range(_agentMinSpeed, _agentMaxSpeed);
+        for (int i = 1; i < numberOfAgents; i++) {
+            randomPos = Random.insideUnitSphere * spawnRadius;                 // Random position in spawn area
+            Bird newBoid = Instantiate(agentPrefab, randomPos, Quaternion.identity, _agentParent.transform);
+            float agentSpeed = Random.Range(agentMinSpeed, agentMaxSpeed);
             behavior = GetRandomBehaviour();
-            newBoid.Init(behavior, _agentSight, _agentSpeed, _agentMaxVelocity);
-            _Agents.Add(newBoid);
+            newBoid.Init(behavior, agentSight, agentSpeed, agentMaxVelocity);
+            agents.Add(newBoid);
         }
     }
 
     private IBirdBehavior GetRandomBehaviour() {
         int index = Random.Range(0, 4);
-        float dense = _denseWeight * 0.01f;
-        float loose = _looseWeight * 0.01f;
-        float elongated = _elongatedWeight * 0.01f;
+        float dense = denseWeight * 0.01f;
+        float loose = looseWeight * 0.01f;
+        float elongated = elongatedWeight * 0.01f;
 
         switch (index) {
             case 0: return new LatecomerBehavior(this, dense, loose, elongated);
@@ -115,15 +114,13 @@ public class FlockManager : MonoBehaviour {
         }
     }
 
-    public Vector3 GetObstaclesForce(Bird bird) {
+    private Vector3 GetObstaclesForce(Bird bird) {
         Vector3 force = Vector3.zero;
-        foreach (var obstacle in _Obstacles) {
-            force += obstacle.GetRepulsionForce(bird);
-        }
+        foreach (var obstacle in obstacles) force += obstacle.GetRepulsionForce(bird);
         return force;
     }
 
-    public SphereCollider GetFlightZone() { return _zone; }
+    public SphereCollider GetFlightZone() => _zone;
 
-    public Bird GetLeader() { return _leader; }
+    public Bird GetLeader() => _leader;
 }
