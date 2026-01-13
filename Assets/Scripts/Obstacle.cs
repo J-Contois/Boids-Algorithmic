@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
-    private readonly float strength = 20f;                                               // Repulsion force
-    private float radius;
-    private readonly float bonusRadius = 2f;
+    private readonly float _strength = 20f;                                               // Repulsion force
+    private readonly float _bonusRadius = 2f;
+    private float _radius;
 
     void Start() {
-        radius = GetComponent<SphereCollider>().radius;                         // Get radius from collider
-        radius *= transform.localScale.x;
-        radius += bonusRadius;                                                  // Make effect zone larger than collider
+        _radius = GetComponent<SphereCollider>().radius;                         // Get radius from collider
+        _radius *= transform.localScale.x;
+        _radius += _bonusRadius;                                                  // Make effect zone larger than collider
     }
 
     public Vector3 GetRepulsionForce(Bird bird) {
@@ -17,10 +17,10 @@ public class Obstacle : MonoBehaviour {
         Vector3 offset = bird.transform.position - transform.position;
         float distance = Vector3.Distance(transform.position, bird.transform.position);
 
-        if (distance <= radius && distance > 0.01f) {
+        if (distance <= _radius && distance > 0.01f) {
             //float factor = 1f - (distance / radius);                        // Force increase with proximity
             //Vector3 repulse = offset.normalized * strength * factor;
-            Vector3 repulse = offset.normalized * strength;
+            Vector3 repulse = offset.normalized * _strength;
             return repulse;
         }
 
@@ -29,6 +29,6 @@ public class Obstacle : MonoBehaviour {
 
     void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radius);
+        Gizmos.DrawWireSphere(transform.position, _radius);
     }
 }

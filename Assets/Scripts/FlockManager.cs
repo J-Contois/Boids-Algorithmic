@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using BirdBehavior;
 using UnityEngine;
 
-// !! Keep leader inside flight zone
-
+// . Trying to keep leader inside flight zone
 // ! Keep agents inside flight area (does it work ?)
-// I Each flock will have one leader
+// L Each flock will have one leader
 // L Add flocks ability to exchange agents
 // L Add agents ability to flee predators and seek food
 // L Add agents ability to avoid obstacles
@@ -35,14 +34,14 @@ public class FlockManager : MonoBehaviour {
     [SerializeField] private float agentMaxSpeed = 10f;
     [SerializeField] private float agentMaxVelocity = 20f;
 
-    private List<Bird> agents;
-    private Obstacle[] obstacles;
+    private List<Bird> _agents;
+    private Obstacle[] _obstacles;
     private GameObject _agentParent;
     private Bird _leader;
     private SphereCollider _zone;
 
     void Start() {
-        obstacles = FindObjectsByType<Obstacle>(FindObjectsSortMode.None);
+        _obstacles = FindObjectsByType<Obstacle>(FindObjectsSortMode.None);
 
         CreateFlightZone();
 
@@ -50,11 +49,11 @@ public class FlockManager : MonoBehaviour {
     }
 
     void Update() {
-        if (agents == null) return;
+        if (_agents == null) return;
 
-        foreach (var agent in agents) {
+        foreach (var agent in _agents) {
             Vector3 force = GetObstaclesForce(agent);
-            agent.Tick(agents, force, agentMinSpeed, Time.deltaTime);
+            agent.Tick(_agents, force, agentMinSpeed, Time.deltaTime);
         }
     }
 
@@ -65,7 +64,7 @@ public class FlockManager : MonoBehaviour {
 
     void CreateFlightZone() {
         _zone = gameObject.GetComponent<SphereCollider>();                      // Add flight zone component
-        if (_zone == null) _zone = gameObject.AddComponent<SphereCollider>();
+        if (!_zone) _zone = gameObject.AddComponent<SphereCollider>();
         _zone.radius = flightRadius;
     }
 
@@ -75,7 +74,7 @@ public class FlockManager : MonoBehaviour {
 
         if (!agentPrefab) return;
 
-        agents = new List<Bird>();
+        _agents = new List<Bird>();
 
         // Create leader
         Vector3 randomPos = Random.insideUnitSphere * spawnRadius;             // Random position in spawn area
@@ -83,7 +82,7 @@ public class FlockManager : MonoBehaviour {
         IBirdBehavior behavior = new LeaderBehavior(this);
         float leaderSpeed = Random.Range(agentMinSpeed, agentMaxSpeed);
         _leader.Init(behavior, agentSight, leaderSpeed, agentMaxVelocity);
-        agents.Add(_leader);
+        _agents.Add(_leader);
 
         if (Camera.main) {
             CameraManager cameraManager = Camera.main.GetComponent<CameraManager>();
@@ -96,7 +95,7 @@ public class FlockManager : MonoBehaviour {
             float agentSpeed = Random.Range(agentMinSpeed, agentMaxSpeed);
             behavior = GetRandomBehaviour();
             newBoid.Init(behavior, agentSight, agentSpeed, agentMaxVelocity);
-            agents.Add(newBoid);
+            _agents.Add(newBoid);
         }
     }
 
@@ -116,7 +115,7 @@ public class FlockManager : MonoBehaviour {
 
     private Vector3 GetObstaclesForce(Bird bird) {
         Vector3 force = Vector3.zero;
-        foreach (var obstacle in obstacles) force += obstacle.GetRepulsionForce(bird);
+        foreach (var obstacle in _obstacles) force += obstacle.GetRepulsionForce(bird);
         return force;
     }
 

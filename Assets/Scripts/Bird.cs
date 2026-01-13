@@ -35,32 +35,25 @@ public class Bird : MonoBehaviour {
     public void Tick(List<Bird> birdList, Vector3 repulsionForce, float agentMinSpeed,  float deltaTime) {
         NeighbourDetector(birdList);
         
-        // Behaviour calculates direction
-        Vector3 steeringForce = _behavior.CalculateMovement(this);
+        Vector3 steeringForce = _behavior.CalculateMovement(this);              // Behaviour calculates direction
 
-        // Velocity update
-        _velocity += repulsionForce;
+        _velocity += repulsionForce;                                            // Velocity update
         _velocity += steeringForce;
         
-        // Application of drag (air friction) to stabilise movement
-        _velocity *= 0.98f;
+        _velocity *= 0.98f;                                                     // Apply air friction to stabilize movement
         
-        // Limits maximum velocity
-        if (_velocity.magnitude > _maxVelocity) _velocity = _velocity.normalized * _maxVelocity;
+        if (_velocity.magnitude > _maxVelocity) _velocity = _velocity.normalized * _maxVelocity;    // Limits maximum velocity
 
-        // Limits minimum velocity
-        _velocity = Vector3.ClampMagnitude(_velocity, _maxVelocity);
+        _velocity = Vector3.ClampMagnitude(_velocity, _maxVelocity);            // Limits minimum velocity
 
         if (_velocity.magnitude < agentMinSpeed)
             _velocity = _velocity.normalized * agentMinSpeed;
 
-        // make movements more fluid
-        float maxRadiansDelta = 90f * Mathf.Deg2Rad * deltaTime;
+        float maxRadiansDelta = 90f * Mathf.Deg2Rad * deltaTime;                // Make movements more fluid
         _velocity = Vector3.RotateTowards(_oldVelocity, _velocity, maxRadiansDelta, float.MaxValue);
         _oldVelocity = _velocity;
         
-        // Move the bird
-        transform.position += _velocity * deltaTime;
+        transform.position += _velocity * deltaTime;                            // Move bird
         
         // Directs the bird in the direction of movement
         if (_velocity.magnitude > 0.1f) transform.rotation = Quaternion.LookRotation(_velocity);
@@ -78,7 +71,7 @@ public class Bird : MonoBehaviour {
         }
     }
 
-    // Look if other bird are in the radius of bird and adding them in neighbour list
+    // Look if other bird are in the radius of bird and adding them in neighbor list
     private void NeighbourDetector(List<Bird> birdList) {
         if (birdList.Count == 0) return;
 
